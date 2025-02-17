@@ -1,0 +1,53 @@
+---
+title: "Lektion 2 - Dataindsamling"
+date: 2025-02-17
+---
+
+**Opgaven:** 
+
+- Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.
+
+- Visualisér netværket og afprøve forskellige layout-algoritmer.
+
+## Indlæs pakker
+
+```{r pkgs}
+#| output: false
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+```
+
+## Generer netværk med 7-10 noder
+
+Jeg laver netværket med tilfældigt udtræk fra en liste af noder.
+Først skal vi vælge, hvem der skal være med i netværket.
+
+```{r}
+network_names <- tibble(name = rep(c("Henrik", "Peter", "Morten", "Søren", "Jeppe"), 2))
+```
+
+```{r}
+n <- length(network_names$name)
+
+network_edges <- tibble(# from = rnorm(n, mean = 5, sd = 2.5) |> ceiling(),
+  # to = rnorm(n, mean = 7, sd = 2.5) |> floor()
+  from = rep(sample(1:10, n, replace = TRUE), 3),
+  to = sample(1:10, n * 3, replace = TRUE)
+)
+```
+
+```{r}
+network <- tbl_graph(nodes = network_names, edges = network_edges)
+```
+
+## Herefter printer vi netværket
+
+```{r}
+network |> 
+  ggraph(layout = "fr") +
+  geom_edge_link() +
+  geom_node_point() +
+  theme_graph()
+```
+
