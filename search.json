@@ -1,21 +1,65 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Liste",
-    "section": "",
-    "text": "Hej\nHer er mine ugesedler\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items\n\n Back to top"
-  },
-  {
     "objectID": "Lektion 2/Lektion 2.html",
     "href": "Lektion 2/Lektion 2.html",
-    "title": "Lektion 2",
+    "title": "Lektion 2 - Dataindsamling",
     "section": "",
-    "text": "Opgave 1\nLav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.\nVisualisér netværket og afprøve forskellige layout-algoritmer.\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(tidygraph)\n\n\nVedhæfter pakke: 'tidygraph'\n\nDet følgende objekt er maskeret fra 'package:stats':\n\n    filter\n\nlibrary(ggraph)\n\nJeg laver netværket med tilfældigt udtræk fra en normalfordeling.\n\nnetwork_names &lt;- tibble(name = rep(c(\"Henrik\", \"Peter\", \"Morten\", \"Søren\", \"Jeppe\"), 50))\n\n\nn &lt;- length(network_names$name)\n\nnetwork_edges &lt;- tibble(\n  # from = rnorm(n, mean = 5, sd = 2.5) |&gt; ceiling(),\n  # to = rnorm(n, mean = 7, sd = 2.5) |&gt; floor()\n  from = sample(\n    1:100, n, replace = TRUE\n  ),\n  to = sample(\n    1:100, n, replace = TRUE\n  )\n)\n\n\nnetwork &lt;- tbl_graph(nodes = network_names, edges = network_edges)\n\nHerefter printer vi netværket\n\nnetwork |&gt; \n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Liste",
-      "Lektion 2",
-      "Lektion 2"
-    ]
+    "text": "Opgaven:"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#indlæs-pakker",
+    "href": "Lektion 2/Lektion 2.html#indlæs-pakker",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Indlæs pakker",
+    "text": "Indlæs pakker\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
+    "href": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Generer netværk med 7-10 noder",
+    "text": "Generer netværk med 7-10 noder\nJeg laver netværket med tilfældigt udtræk fra en liste af noder. Først skal vi vælge, hvem der skal være med i netværket.\n\nnetwork_names &lt;- tibble(name = rep(c(\"Henrik\", \"Peter\", \"Morten\", \"Søren\", \"Jeppe\"), 2))\n\n\nn &lt;- length(network_names$name)\n\nnetwork_edges &lt;- tibble(# from = rnorm(n, mean = 5, sd = 2.5) |&gt; ceiling(),\n  # to = rnorm(n, mean = 7, sd = 2.5) |&gt; floor()\n  from = rep(sample(1:10, n, replace = TRUE), 3),\n  to = sample(1:10, n * 3, replace = TRUE)\n)\n\n\nnetwork &lt;- tbl_graph(nodes = network_names, edges = network_edges)"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
+    "href": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Herefter printer vi netværket",
+    "text": "Herefter printer vi netværket\n\nnetwork |&gt; \n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Ugesedler",
+    "section": "",
+    "text": "Lektion 2 - Dataindsamling\n\n\n\n\n\n\n\n\n\n\n\nFeb 17, 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 1 - Generel teori om sociale netværk\n\n\n\n\n\n\n\n\n\n\n\nFeb 3, 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\nNo matching items\n\n Back to top"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html",
+    "href": "Lektion 1/Lektion 1.html",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#indlæs-pakker",
+    "href": "Lektion 1/Lektion 1.html#indlæs-pakker",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
+    "href": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "Hent og indlæs data",
+    "text": "Hent og indlæs data\nFørst henter jeg data fra linket med read_tsv(). Derefter indlæser jeg dataene som edges med tbl_graph().\n\nurl &lt;- \"https://cfa-research.au.dk/courses/networks_F25/data/lektion1_zach_edges.txt\"\nzachary &lt;- read_tsv(url) |&gt;\n  tbl_graph(edges = _)"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
+    "href": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "Plot grafen med FR og KK",
+    "text": "Plot grafen med FR og KK\nFørst plotter jeg grafen med fr.\n\nzachary |&gt;\n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\nDernæst plotter jeg grafen med kk.\n\nzachary |&gt;\n  ggraph(layout = \"kk\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()"
   }
 ]

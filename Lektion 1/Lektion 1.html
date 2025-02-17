@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aleksander Bang-Larsen">
-<meta name="dcterms.date" content="2025-02-17">
+<meta name="dcterms.date" content="2025-02-03">
 
-<title>Lektion 2 - Dataindsamling – Aleksanders netværksanalyser</title>
+<title>Lektion 1 - Generel teori om sociale netværk – Aleksanders netværksanalyser</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -154,17 +154,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#indlæs-pakker" id="toc-indlæs-pakker" class="nav-link active" data-scroll-target="#indlæs-pakker">Indlæs pakker</a></li>
-  <li><a href="#generer-netværk-med-7-10-noder" id="toc-generer-netværk-med-7-10-noder" class="nav-link" data-scroll-target="#generer-netværk-med-7-10-noder">Generer netværk med 7-10 noder</a></li>
-  <li><a href="#herefter-printer-vi-netværket" id="toc-herefter-printer-vi-netværket" class="nav-link" data-scroll-target="#herefter-printer-vi-netværket">Herefter printer vi netværket</a></li>
+  <li><a href="#hent-og-indlæs-data" id="toc-hent-og-indlæs-data" class="nav-link" data-scroll-target="#hent-og-indlæs-data">Hent og indlæs data</a></li>
+  <li><a href="#plot-grafen-med-fr-og-kk" id="toc-plot-grafen-med-fr-og-kk" class="nav-link" data-scroll-target="#plot-grafen-med-fr-og-kk">Plot grafen med FR og KK</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 2/Lektion 2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 2/Lektion 2.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 1/Lektion 1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 1/Lektion 1.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lektion 2 - Dataindsamling</h1>
+<h1 class="title">Lektion 1 - Generel teori om sociale netværk</h1>
 </div>
 
 
@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 17, 2025</p>
+      <p class="date">February 3, 2025</p>
     </div>
   </div>
   
@@ -193,11 +193,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Opgaven:</strong></p>
-<ul>
-<li><p>Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.</p></li>
-<li><p>Visualisér netværket og afprøve forskellige layout-algoritmer.</p></li>
-</ul>
 <section id="indlæs-pakker" class="level2">
 <h2 class="anchored" data-anchor-id="indlæs-pakker">Indlæs pakker</h2>
 <div class="cell">
@@ -206,37 +201,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="generer-netværk-med-7-10-noder" class="level2">
-<h2 class="anchored" data-anchor-id="generer-netværk-med-7-10-noder">Generer netværk med 7-10 noder</h2>
-<p>Jeg laver netværket med tilfældigt udtræk fra en liste af noder. Først skal vi vælge, hvem der skal være med i netværket.</p>
+<section id="hent-og-indlæs-data" class="level2">
+<h2 class="anchored" data-anchor-id="hent-og-indlæs-data">Hent og indlæs data</h2>
+<p>Først henter jeg data fra linket med <code>read_tsv()</code>. Derefter indlæser jeg dataene som <code>edges</code> med <code>tbl_graph()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>network_names <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">name =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Henrik"</span>, <span class="st">"Peter"</span>, <span class="st">"Morten"</span>, <span class="st">"Søren"</span>, <span class="st">"Jeppe"</span>), <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(network_names<span class="sc">$</span>name)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>network_edges <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="co"># from = rnorm(n, mean = 5, sd = 2.5) |&gt; ceiling(),</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># to = rnorm(n, mean = 7, sd = 2.5) |&gt; floor()</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> <span class="fu">rep</span>(<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>), <span class="dv">3</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, n <span class="sc">*</span> <span class="dv">3</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> network_names, <span class="at">edges =</span> network_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://cfa-research.au.dk/courses/networks_F25/data/lektion1_zach_edges.txt"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>zachary <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(url) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_graph</span>(<span class="at">edges =</span> _)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="herefter-printer-vi-netværket" class="level2">
-<h2 class="anchored" data-anchor-id="herefter-printer-vi-netværket">Herefter printer vi netværket</h2>
+<section id="plot-grafen-med-fr-og-kk" class="level2">
+<h2 class="anchored" data-anchor-id="plot-grafen-med-fr-og-kk">Plot grafen med FR og KK</h2>
+<p>Først plotter jeg grafen med <em>fr</em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>() <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>zachary <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Lektion-2_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Lektion-1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Dernæst plotter jeg grafen med <em>kk</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>zachary <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"kk"</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>() <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -668,4 +669,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 2/Lektion 2.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 2/Lektion 2.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 1/Lektion 1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 1/Lektion 1.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
