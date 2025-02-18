@@ -28,34 +28,6 @@
     "text": "Kode\n\nKoden på denne side er udstillet med MIT-licens.\n\nDet betyder, at du frit kan genbruge, modificere og distribuere koden."
   },
   {
-    "objectID": "Lektion 1/Lektion 1.html",
-    "href": "Lektion 1/Lektion 1.html",
-    "title": "Lektion 1 - Generel teori om sociale netværk",
-    "section": "",
-    "text": "Skriv korte reflektioner over hvordan du vil indlæse og visualisere det grundlæggende netværk i Zacharys Karate Club.\nHent Zachary data fra filen og plot grafen med to forskellige algoritmer."
-  },
-  {
-    "objectID": "Lektion 1/Lektion 1.html#indlæs-pakker",
-    "href": "Lektion 1/Lektion 1.html#indlæs-pakker",
-    "title": "Lektion 1 - Generel teori om sociale netværk",
-    "section": "Indlæs pakker",
-    "text": "Indlæs pakker\nFørst vil jeg indlæse de nødvendige pakker.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
-  },
-  {
-    "objectID": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
-    "href": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
-    "title": "Lektion 1 - Generel teori om sociale netværk",
-    "section": "Hent og indlæs data",
-    "text": "Hent og indlæs data\nHerefter henter jeg data fra linket med read_tsv(). Det data piper jeg ind i tbl_graph() som edges.\nJeg giver read_tsv() filens URL for at gøre koden mere portable. Det kunne også være smart at hente den lokalt, hvis jeg skulle være nervøs for at filen ville ændre sig. Jeg gemmertbl_graph-objektet i variablen zachary.\n\nurl &lt;- \"https://cfa-research.au.dk/courses/networks_F25/data/lektion1_zach_edges.txt\"\nzachary &lt;- read_tsv(url) |&gt;\n  tbl_graph(edges = _)\n\nOvenstående trin kunne godt være delt op i flere code-blocks, men det er ikke særligt effektivt. For at være sikker på min komprimerede udgave giver mig det rigtige output vil jeg dog inspicere dataet med glimpse().\n\nglimpse(zachary)\n\n── Nodes ───────────────────────────────────────────────────────────────────────\n\n\nRows: 34\nColumns: 0\n\n\n── Edges ───────────────────────────────────────────────────────────────────────\n\n\nRows: 78\nColumns: 2\n$ from &lt;int&gt; 1, 1, 2, 1, 2, 3, 1, 1, 1, 5, 6, 1, 2, 3, 4, 1, 3, 3, 1, 5, 6, 1,…\n$ to   &lt;int&gt; 2, 3, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 9, 9, 10, 11, 11, 11…\n\n\nDet ser umiddelbart fint ud - Jeg går videre."
-  },
-  {
-    "objectID": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
-    "href": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
-    "title": "Lektion 1 - Generel teori om sociale netværk",
-    "section": "Plot grafen med FR og KK",
-    "text": "Plot grafen med FR og KK\nFørst plotter jeg grafen med fr. Det giver et lidt rodet netværk. Jeg har svært ved at helt tyde, hvordan noderne hænger sammen - Især dem der ikke bedst forbundne.\n\nzachary |&gt;\n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\nDernæst plotter jeg grafen med kk. Det har jeg hørt Jens Peter godt kan lide - Og det kan jeg godt forstå! Her får jeg godt overblik over alle noderne og jeg kan let kende forskel på de noder der er godt og dårligt forbundet.\n\nzachary |&gt;\n  ggraph(layout = \"kk\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\nTil sidst vil jeg forsøge med et stress-layout. Thomas Lin skriver i sin dokumentation at dette layout baseret på stress minimisation har bedre stabilitet end KK-layouet ovenfor. Som jeg ser det, giver dette layout et mere “fladt” udseende. Kanterne bliver længere, hvilket ikke er så problematisk for dette datasæt, men nok vil være det ved større netværk.\n\nzachary |&gt; \n  create_layout(layout = \"stress\") |&gt; \n  ggraph() +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Opgaver",
@@ -88,6 +60,34 @@
     "href": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
     "title": "Lektion 2 - Dataindsamling",
     "section": "Herefter printer vi netværket",
-    "text": "Herefter printer vi netværket\nJeg bruger stress-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\", weights = rand_weight) +\n  geom_edge_link(\n    arrow = arrow(length = unit(4, \"mm\"), type = \"closed\"),\n    aes(color = quantile)\n  ) +\n  geom_node_point() +\n  geom_node_label(\n    aes(label = name),\n    repel = TRUE\n  ) +\n  scale_edge_color_viridis(\n    name = \"Vægt kvartil\",\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  coord_cartesian(clip = \"off\") + # For at labels ikke \"clippes\" når de går længere ud end grafen.\n  theme_graph()\n\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database"
+    "text": "Herefter printer vi netværket\nJeg bruger stress-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\", weights = rand_weight) +\n  geom_edge_link(\n    arrow = arrow(length = unit(4, \"mm\"), type = \"closed\"),\n    aes(color = quantile)\n  ) +\n  geom_node_point() +\n  geom_node_label(\n    aes(label = name),\n    repel = TRUE\n  ) +\n  scale_edge_color_viridis(\n    name = \"Vægt kvartil\",\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  coord_cartesian(clip = \"off\") + # For at labels ikke \"clippes\" når de går længere ud end grafen.\n  theme_graph()"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html",
+    "href": "Lektion 1/Lektion 1.html",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "",
+    "text": "Skriv korte reflektioner over hvordan du vil indlæse og visualisere det grundlæggende netværk i Zacharys Karate Club.\nHent Zachary data fra filen og plot grafen med to forskellige algoritmer."
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#indlæs-pakker",
+    "href": "Lektion 1/Lektion 1.html#indlæs-pakker",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "Indlæs pakker",
+    "text": "Indlæs pakker\nFørst vil jeg indlæse de nødvendige pakker.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
+    "href": "Lektion 1/Lektion 1.html#hent-og-indlæs-data",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "Hent og indlæs data",
+    "text": "Hent og indlæs data\nHerefter henter jeg data fra linket med read_tsv(). Det data piper jeg ind i tbl_graph() som edges.\nJeg giver read_tsv() filens URL for at gøre koden mere portable. Det kunne også være smart at hente den lokalt, hvis jeg skulle være nervøs for at filen ville ændre sig. Jeg gemmertbl_graph-objektet i variablen zachary.\n\nurl &lt;- \"https://cfa-research.au.dk/courses/networks_F25/data/lektion1_zach_edges.txt\"\nzachary &lt;- read_tsv(url) |&gt;\n  tbl_graph(edges = _)\n\nOvenstående trin kunne godt være delt op i flere code-blocks, men det er ikke særligt effektivt. For at være sikker på min komprimerede udgave giver mig det rigtige output vil jeg dog inspicere dataet med glimpse().\n\nglimpse(zachary)\n\n── Nodes ───────────────────────────────────────────────────────────────────────\n\n\nRows: 34\nColumns: 0\n\n\n── Edges ───────────────────────────────────────────────────────────────────────\n\n\nRows: 78\nColumns: 2\n$ from &lt;int&gt; 1, 1, 2, 1, 2, 3, 1, 1, 1, 5, 6, 1, 2, 3, 4, 1, 3, 3, 1, 5, 6, 1,…\n$ to   &lt;int&gt; 2, 3, 3, 4, 4, 4, 5, 6, 7, 7, 7, 8, 8, 8, 8, 9, 9, 10, 11, 11, 11…\n\n\nDet ser umiddelbart fint ud - Jeg går videre."
+  },
+  {
+    "objectID": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
+    "href": "Lektion 1/Lektion 1.html#plot-grafen-med-fr-og-kk",
+    "title": "Lektion 1 - Generel teori om sociale netværk",
+    "section": "Plot grafen med FR og KK",
+    "text": "Plot grafen med FR og KK\nFørst plotter jeg grafen med fr. Det giver et lidt rodet netværk. Jeg har svært ved at helt tyde, hvordan noderne hænger sammen - Især dem der ikke bedst forbundne.\n\nzachary |&gt;\n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\nDernæst plotter jeg grafen med kk. Det har jeg hørt Jens Peter godt kan lide - Og det kan jeg godt forstå! Her får jeg godt overblik over alle noderne og jeg kan let kende forskel på de noder der er godt og dårligt forbundet.\n\nzachary |&gt;\n  ggraph(layout = \"kk\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()\n\n\n\n\n\n\n\n\nTil sidst vil jeg forsøge med et stress-layout. Thomas Lin skriver i sin dokumentation at dette layout baseret på stress minimisation har bedre stabilitet end KK-layouet ovenfor. Som jeg ser det, giver dette layout et mere “fladt” udseende. Kanterne bliver længere, hvilket ikke er så problematisk for dette datasæt, men nok vil være det ved større netværk.\n\nzachary |&gt; \n  create_layout(layout = \"stress\") |&gt; \n  ggraph() +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()"
   }
 ]
