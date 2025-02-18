@@ -3,51 +3,80 @@ title: "Lektion 2 - Dataindsamling"
 date: 2025-02-17
 ---
 
-**Opgaven:** 
-
 - Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.
 
 - Visualisér netværket og afprøve forskellige layout-algoritmer.
 
 ## Indlæs pakker
 
+Først skal vi indlæse de nødvendige pakker. Jeg sætter også et `seed` for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.
+
 ```{r pkgs}
 #| output: false
 library(tidyverse)
 library(tidygraph)
 library(ggraph)
+set.seed(17022025) # Dags dato
 ```
 
 ## Generer netværk med 7-10 noder
 
-Jeg laver netværket med tilfældigt udtræk fra en liste af noder.
-Først skal vi vælge, hvem der skal være med i netværket.
+Jeg laver netværket med tilfældigt udtræk fra en liste af noder. Jeg har valgt at det skal være directed.
+Først skal vi vælge, hvem der skal være med i netværket. I mit fiktive scenarie vælger jeg politikere og lobbyister. De får alle et bogstav til at identificere sig med.
 
 ```{r}
-network_names <- tibble(name = rep(c("Henrik", "Peter", "Morten", "Søren", "Jeppe"), 2))
+network_names <- tibble(name = paste(c("Politiker", "Lobbyist"), LETTERS[1:10]))
+print(network_names$name)
 ```
 
-```{r}
-n <- length(network_names$name)
+Nu har vi navne-vectoren (egentlig navne-kolonnen). Det næste jeg skal producere er en tibble med minimum `from` og `to` kolonner. Her starter jeg med at gentage noderne $1-7$. De bliver forbundet med noder der tilfældigt udtrækkes fra en vector $4-10$. På den måde får jeg noder der er mere og mindre forbundet. Udover `to` og `from` kolonnerne laver jeg også en tilfældigt udtræk af en vægt for hver kant. De vægter inddeler jeg også i hver sin kvartil.
 
-network_edges <- tibble(# from = rnorm(n, mean = 5, sd = 2.5) |> ceiling(),
-  # to = rnorm(n, mean = 7, sd = 2.5) |> floor()
-  from = rep(sample(1:10, n, replace = TRUE), 3),
-  to = sample(1:10, n * 3, replace = TRUE)
+```{r}
+network_edges <- tibble(
+  from = rep(1:7, 3),
+  to = sample(4:10, length(from), replace = TRUE),
+  rand_weight = runif(length(from)),
+  quantile = cut(
+    rand_weight,
+    breaks = quantile(rand_weight, probs = seq(0, 1, 0.25)),
+    labels = c("Q1", "Q2", "Q3", "Q4"),
+    include.lowest = TRUE
+  )
 )
 ```
 
+Her er netværkets kanter så genereret som `tibble`. Det kan vi inputte, sammen med nodernes navne. Derudover specificerer jeg også at netværket skal være *directed*.
+
 ```{r}
-network <- tbl_graph(nodes = network_names, edges = network_edges)
+network <- tbl_graph(
+  nodes = network_names,
+  edges = network_edges,
+  directed = TRUE
+)
 ```
 
 ## Herefter printer vi netværket
 
+Jeg bruger `stress`-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.
+
 ```{r}
-network |> 
-  ggraph(layout = "fr") +
-  geom_edge_link() +
+network |>
+  ggraph(layout = "stress", weights = rand_weight) +
+  geom_edge_link(
+    arrow = arrow(length = unit(4, "mm"), type = "closed"),
+    aes(color = quantile)
+  ) +
   geom_node_point() +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE
+  ) +
+  scale_edge_color_viridis(
+    name = "Vægt kvartil",
+    discrete = TRUE,
+    option = "turbo"
+  ) +
+  coord_cartesian(clip = "off") + # For at labels ikke "clippes" når de går længere ud end grafen.
   theme_graph()
 ```
 
