@@ -1,5 +1,8 @@
 project:
   type: website
+  preview:
+    port: 4200
+    browser: false
 
 author: Aleksander Bang-Larsen
 

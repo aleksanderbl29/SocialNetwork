@@ -3,7 +3,12 @@ title: "Lektion 1 - Generel teori om sociale netværk"
 date: 2025-02-03
 ---
 
+- Skriv korte reflektioner over hvordan du vil indlæse og visualisere det grundlæggende netværk i Zacharys Karate Club.
+- Hent Zachary data fra filen og plot grafen med to forskellige algoritmer.
+
 ## Indlæs pakker
+
+Først vil jeg indlæse de nødvendige pakker.
 
 ```{r}
 #| output: false
@@ -14,7 +19,9 @@ library(ggraph)
 
 ## Hent og indlæs data
 
-Først henter jeg data fra linket med `read_tsv()`. Derefter indlæser jeg dataene som `edges` med `tbl_graph()`.
+Herefter henter jeg data fra linket med `read_tsv()`. Det data *piper* jeg ind i `tbl_graph()` som edges.
+
+Jeg giver `read_tsv()` filens URL for at gøre koden mere *portable*. Det kunne også være smart at hente den lokalt, hvis jeg skulle være nervøs for at filen ville ændre sig. Jeg gemmer`tbl_graph`-objektet i variablen zachary.
 
 ```{r}
 #| output: false
@@ -23,9 +30,17 @@ zachary <- read_tsv(url) |>
   tbl_graph(edges = _)
 ```
 
+Ovenstående trin *kunne* godt være delt op i flere code-blocks, men det er ikke særligt effektivt. For at være sikker på min komprimerede udgave giver mig det rigtige output vil jeg dog inspicere dataet med `glimpse()`.
+
+```{r}
+glimpse(zachary)
+```
+
+Det ser umiddelbart fint ud - Jeg går videre.
+
 ## Plot grafen med FR og KK
 
-Først plotter jeg grafen med *fr*.
+Først plotter jeg grafen med *fr*. Det giver et lidt rodet netværk. Jeg har svært ved at helt tyde, hvordan noderne hænger sammen - Især dem der ikke bedst forbundne.
 
 ```{r}
 zachary |>
@@ -35,7 +50,7 @@ zachary |>
   theme_graph()
 ```
 
-Dernæst plotter jeg grafen med *kk*.
+Dernæst plotter jeg grafen med *kk*. Det har jeg hørt Jens Peter godt kan lide - Og det kan jeg godt forstå! Her får jeg godt overblik over alle noderne og jeg kan let kende forskel på de noder der er godt og dårligt forbundet.
 
 ```{r}
 zachary |>
@@ -44,3 +59,15 @@ zachary |>
   geom_node_point() +
   theme_graph()
 ```
+
+Til sidst vil jeg forsøge med et stress-layout. Thomas Lin skriver i sin dokumentation at dette layout baseret på stress minimisation har bedre stabilitet end KK-layouet ovenfor. Som jeg ser det, giver dette layout et mere "fladt" udseende. Kanterne bliver længere, hvilket ikke er så problematisk for dette datasæt, men nok vil være det ved større netværk.
+
+```{r}
+zachary |> 
+  create_layout(layout = "stress") |> 
+  ggraph() +
+  geom_edge_link() +
+  geom_node_point() +
+  theme_graph()
+```
+
