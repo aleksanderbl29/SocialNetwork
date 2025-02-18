@@ -1,0 +1,21 @@
+---
+title: "Licens"
+format: html
+author: ""
+---
+
+## Opgaver og besvarelse
+
+- Opgavebesvarelser på denne side er underlagt © Copyright 2025, Aleksander Bang-Larsen
+- Opgaverne er stillet af Jens Peter Andersen & Emil Dolmer Alnor under Creative Commons CC-BY.
+  - Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.
+
+## Data
+
+- Datamaterialet er under Creative Commons CC-BY medmindre andet er angivet.
+  - Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.
+
+## Kode
+
+- Koden på denne side er udstillet med MIT-licens.
+  - Det betyder, at du frit kan genbruge, modificere og distribuere koden.

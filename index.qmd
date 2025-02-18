@@ -1,5 +1,5 @@
 ---
-title: "Ugesedler"
+title: "Opgaver"
 listing: 
   contents:
     - "Lektion 2/Lektion 2.qmd"

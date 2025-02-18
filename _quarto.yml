@@ -3,12 +3,17 @@ project:
 
 author: Aleksander Bang-Larsen
 
+lang: da
+
 website:
   title: "Aleksanders netværksanalyser"
   back-to-top-navigation: true
   page-navigation: true
   repo-url: https://github.com/aleksanderbl29/SocialNetwork
   repo-actions: [edit, source, issue]
+  repo-link-target: _blank
+  site-url: https://aleksanderbl.dk/SocialNetwork/
+  open-graph: true
   # sidebar:
   #   contents: auto
   navbar:
@@ -16,6 +21,8 @@ website:
       - index.qmd
       - href: https://github.com/aleksanderbl29/SocialNetwork
         text: Link til koden
+      - href: license.qmd
+        text: Licens
     right:
       - href: https://aleksanderbl.dk
         text: Min hjemmeside
@@ -25,3 +32,4 @@ format:
   html:
     theme: united
     toc: true
+    smooth-scroll: true
