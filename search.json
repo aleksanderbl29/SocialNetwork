@@ -67,27 +67,27 @@
     "href": "Lektion 2/Lektion 2.html",
     "title": "Lektion 2 - Dataindsamling",
     "section": "",
-    "text": "Opgaven:"
+    "text": "Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.\nVisualisér netværket og afprøve forskellige layout-algoritmer."
   },
   {
     "objectID": "Lektion 2/Lektion 2.html#indlæs-pakker",
     "href": "Lektion 2/Lektion 2.html#indlæs-pakker",
     "title": "Lektion 2 - Dataindsamling",
     "section": "Indlæs pakker",
-    "text": "Indlæs pakker\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)"
+    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\nset.seed(17022025) # Dags dato"
   },
   {
     "objectID": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
     "href": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
     "title": "Lektion 2 - Dataindsamling",
     "section": "Generer netværk med 7-10 noder",
-    "text": "Generer netværk med 7-10 noder\nJeg laver netværket med tilfældigt udtræk fra en liste af noder. Først skal vi vælge, hvem der skal være med i netværket.\n\nnetwork_names &lt;- tibble(name = rep(c(\"Henrik\", \"Peter\", \"Morten\", \"Søren\", \"Jeppe\"), 2))\n\n\nn &lt;- length(network_names$name)\n\nnetwork_edges &lt;- tibble(# from = rnorm(n, mean = 5, sd = 2.5) |&gt; ceiling(),\n  # to = rnorm(n, mean = 7, sd = 2.5) |&gt; floor()\n  from = rep(sample(1:10, n, replace = TRUE), 3),\n  to = sample(1:10, n * 3, replace = TRUE)\n)\n\n\nnetwork &lt;- tbl_graph(nodes = network_names, edges = network_edges)"
+    "text": "Generer netværk med 7-10 noder\nJeg laver netværket med tilfældigt udtræk fra en liste af noder. Jeg har valgt at det skal være directed. Først skal vi vælge, hvem der skal være med i netværket. I mit fiktive scenarie vælger jeg politikere og lobbyister. De får alle et bogstav til at identificere sig med.\n\nnetwork_names &lt;- tibble(name = paste(c(\"Politiker\", \"Lobbyist\"), LETTERS[1:10]))\nprint(network_names$name)\n\n [1] \"Politiker A\" \"Lobbyist B\"  \"Politiker C\" \"Lobbyist D\"  \"Politiker E\"\n [6] \"Lobbyist F\"  \"Politiker G\" \"Lobbyist H\"  \"Politiker I\" \"Lobbyist J\" \n\n\nNu har vi navne-vectoren (egentlig navne-kolonnen). Det næste jeg skal producere er en tibble med minimum from og to kolonner. Her starter jeg med at gentage noderne \\(1-7\\). De bliver forbundet med noder der tilfældigt udtrækkes fra en vector \\(4-10\\). På den måde får jeg noder der er mere og mindre forbundet. Udover to og from kolonnerne laver jeg også en tilfældigt udtræk af en vægt for hver kant. De vægter inddeler jeg også i hver sin kvartil.\n\nnetwork_edges &lt;- tibble(\n  from = rep(1:7, 3),\n  to = sample(4:10, length(from), replace = TRUE),\n  rand_weight = runif(length(from)),\n  quantile = cut(\n    rand_weight,\n    breaks = quantile(rand_weight, probs = seq(0, 1, 0.25)),\n    labels = c(\"Q1\", \"Q2\", \"Q3\", \"Q4\"),\n    include.lowest = TRUE\n  )\n)\n\nHer er netværkets kanter så genereret som tibble. Det kan vi inputte, sammen med nodernes navne. Derudover specificerer jeg også at netværket skal være directed.\n\nnetwork &lt;- tbl_graph(\n  nodes = network_names,\n  edges = network_edges,\n  directed = TRUE\n)"
   },
   {
     "objectID": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
     "href": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
     "title": "Lektion 2 - Dataindsamling",
     "section": "Herefter printer vi netværket",
-    "text": "Herefter printer vi netværket\n\nnetwork |&gt; \n  ggraph(layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  theme_graph()"
+    "text": "Herefter printer vi netværket\nJeg bruger stress-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\", weights = rand_weight) +\n  geom_edge_link(\n    arrow = arrow(length = unit(4, \"mm\"), type = \"closed\"),\n    aes(color = quantile)\n  ) +\n  geom_node_point() +\n  geom_node_label(\n    aes(label = name),\n    repel = TRUE\n  ) +\n  scale_edge_color_viridis(\n    name = \"Vægt kvartil\",\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  coord_cartesian(clip = \"off\") + # For at labels ikke \"clippes\" når de går længere ud end grafen.\n  theme_graph()\n\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\nWarning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family\nnot found in Windows font database\n\n\nWarning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font\nfamily not found in Windows font database\n\n\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database\nWarning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :\nfont family not found in Windows font database"
   }
 ]
