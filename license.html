@@ -8,7 +8,7 @@
 
 <meta name="author" content="">
 
-<title>Opgaver – Aleksanders netværksanalyser</title>
+<title>Licens – Aleksanders netværksanalyser</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -69,68 +67,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Søg"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <style>html{ scroll-behavior: smooth; }</style>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<meta property="og:title" content="Opgaver – Aleksanders netværksanalyser">
+<meta property="og:title" content="Licens – Aleksanders netværksanalyser">
 <meta property="og:site_name" content="Aleksanders netværksanalyser">
 </head>
 
@@ -152,7 +92,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Opgaver</span></a>
   </li>  
   <li class="nav-item">
@@ -160,7 +100,7 @@ window.Quarto = {
 <span class="menu-text">Link til koden</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./license.html"> 
+    <a class="nav-link active" href="./license.html" aria-current="page"> 
 <span class="menu-text">Licens</span></a>
   </li>  
 </ul>
@@ -180,15 +120,23 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">På denne side</h2>
+   
+  <ul>
+  <li><a href="#opgaver-og-besvarelse" id="toc-opgaver-og-besvarelse" class="nav-link active" data-scroll-target="#opgaver-og-besvarelse">Opgaver og besvarelse</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#kode" id="toc-kode" class="nav-link" data-scroll-target="#kode">Kode</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/license.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/license.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Opgaver</h1>
+<h1 class="title">Licens</h1>
 </div>
 
 
@@ -205,73 +153,38 @@ window.Quarto = {
 </header>
 
 
+<section id="opgaver-og-besvarelse" class="level2">
+<h2 class="anchored" data-anchor-id="opgaver-og-besvarelse">Opgaver og besvarelse</h2>
+<ul>
+<li>Opgavebesvarelser på denne side er underlagt © Copyright 2025, Aleksander Bang-Larsen</li>
+<li>Opgaverne er stillet af Jens Peter Andersen &amp; Emil Dolmer Alnor under Creative Commons CC-BY.
+<ul>
+<li>Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.</li>
+</ul></li>
+</ul>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<ul>
+<li>Datamaterialet er under Creative Commons CC-BY medmindre andet er angivet.
+<ul>
+<li>Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.</li>
+</ul></li>
+</ul>
+</section>
+<section id="kode" class="level2">
+<h2 class="anchored" data-anchor-id="kode">Kode</h2>
+<ul>
+<li>Koden på denne side er udstillet med MIT-licens.
+<ul>
+<li>Det betyder, at du frit kan genbruge, modificere og distribuere koden.</li>
+</ul></li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1739750400000" data-listing-file-modified-sort="1739868619334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="156">
-<div class="thumbnail">
-<p><a href="./Lektion 2/Lektion 2.html" class="no-external"></a></p><a href="./Lektion 2/Lektion 2.html" class="no-external">
-<p class="card-img-top"><img src="Lektion 2\Lektion-2_files\figure-html\unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./Lektion 2/Lektion 2.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./Lektion 2/Lektion 2.html" class="no-external">Lektion 2 - Dataindsamling</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./Lektion 2/Lektion 2.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./Lektion 2/Lektion 2.html" class="no-external"><strong>Opgaven:</strong></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./Lektion 2/Lektion 2.html" class="no-external">
-<div class="listing-date">
-17. feb. 2025
-</div>
-<div class="listing-author">
-Aleksander Bang-Larsen
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1738540800000" data-listing-file-modified-sort="1739868619334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="329">
-<div class="thumbnail">
-<p><a href="./Lektion 1/Lektion 1.html" class="no-external"></a></p><a href="./Lektion 1/Lektion 1.html" class="no-external">
-<p class="card-img-top"><img src="Lektion 1\Lektion-1_files\figure-html\unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./Lektion 1/Lektion 1.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./Lektion 1/Lektion 1.html" class="no-external">Lektion 1 - Generel teori om sociale netværk</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./Lektion 1/Lektion 1.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./Lektion 1/Lektion 1.html" class="no-external">Først vil jeg indlæse de nødvendige pakker.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./Lektion 1/Lektion 1.html" class="no-external">
-<div class="listing-date">
-3. feb. 2025
-</div>
-<div class="listing-author">
-Aleksander Bang-Larsen
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-Ingen resultater
-</div>
-</div><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Tilbage til toppen</a></main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Tilbage til toppen</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -694,5 +607,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/index.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/license.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/license.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
