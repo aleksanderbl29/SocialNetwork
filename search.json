@@ -39,7 +39,7 @@
     "href": "Lektion 3/Lektion 3.html",
     "title": "Lektion 3",
     "section": "",
-    "text": "I har lavet i forvejen løst opgaven: - ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”\nNu skal I løse opgaverne: - Lav en edgelist i excel, pba. af jeres netværk. - Lav en nodelist i excel. Bestem nodernes organisatoriske roller. - Importer excel-filerne til R, og dan en graf ud af dem. - Beregn 3 centralitetsmål for noderne. - Visualiser netværket. Lad nodestørrelse være bestemt af centralitet og lad farve/form være bestemt af organisatorisk rolle."
+    "text": "I har lavet i forvejen løst opgaven: - ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”\nNu skal I løse opgaverne:"
   },
   {
     "objectID": "Lektion 3/Lektion 3.html#lav-edge--og-nodelist-i-excelark",
