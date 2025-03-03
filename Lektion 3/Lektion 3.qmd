@@ -103,9 +103,16 @@ network |>
       color = job_name,
       shape = job_name,
       size = degree
-    ),
-    size = 4) +
+    )) +
+  labs(
+    color = "Stilling",
+    shape = "Stilling",
+    size = "Centralitet"
+  ) +
   scale_color_viridis(discrete = TRUE, option = "turbo") +
-  theme_graph()
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
 ```
 

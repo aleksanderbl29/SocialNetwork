@@ -1,0 +1,153 @@
+---
+title: "Lektion 4"
+date: 2025-03-03
+---
+
+Vi arbejder videre med øvelsen fra sidste gang.
+
+Hvis I når at blive færdige, prøv at lave en clustering på baggrund af cosinus-lighed.
+
+- Jeg nåede at blive færdig, så her laver vi cluster analyse.
+
+## Indlæs pakker
+
+Først skal vi indlæse de nødvendige pakker. Jeg sætter også et `seed` for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.
+
+```{r pkgs}
+#| output: false
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+library(igraph)
+library(dendextend)
+```
+
+## Kode fra sidste gang
+
+Før jeg kan begynde på cluster analysen skal jeg have opbygget netværket fra sidste gang.
+
+```{r}
+e <- readxl::read_excel("Lektion 3/edgelist.xlsx")
+n <- readxl::read_excel("Lektion 3/nodelist.xlsx")
+network <- tbl_graph(
+  nodes = n,
+  edges = e,
+  directed = FALSE
+)
+```
+
+## Clustering analyse
+
+Først skal vi convertere edgelisten til en adjacency matrix.
+
+```{r}
+adj_mat <- igraph::as_adjacency_matrix(network)
+```
+
+Jeg definerer en funktion til at udregne similaritets-matricen
+
+```{r}
+sim_mat <- function(m) {
+  n <- nrow(adj_mat)
+  sim_matrix <- matrix(0, nrow = n, ncol = n)
+  for (i in 1:n) {
+    for (j in 1:n) {
+      numerator <- sum(m[i, ] * m[j, ])
+      denominator <- (sqrt(sum(m[i, ]^2)) * sqrt(sum(m[j, ]^2)))
+      if (denominator > 0) {
+        cosine <- numerator / denominator
+      } else {
+        cosine <- 0
+      }
+      sim_matrix[i, j] <- cosine
+    }
+  }
+  (sim_matrix)
+}
+```
+
+Herefter udregner jeg en similaritetsmatrice for mit netværk.
+
+```{r}
+sm <- sim_mat(adj_mat)
+```
+
+## Visualisering
+
+For at visualisere matricen vil jeg først bruge corrplot og dernæst et dendogram. Til sidst vil jeg forsøge at tilføje clusters til mit ggplot (ggpraph).
+
+### Corrplot
+
+```{r}
+corrplot::corrplot(
+  sm,
+  # type = "lower",
+  hclust.method = "ward.D2",
+  addrect = 4,
+  rect.col = "black",
+  order = "hclust",
+  is.corr = FALSE)
+```
+
+
+### Dendogram
+
+Først udregner jeg distancematrice.
+
+```{r}
+d <- 1 - sm
+```
+
+Herefter udregner jeg clusterne med `ward.D2`-metoden og omdanner til dendogram.
+
+```{r}
+hc <- hclust(as.dist(d), method="ward.D2")
+dend <- as.dendrogram(hc)
+```
+
+```{r}
+plot(dend, main="Hierarchical Clustering with Ward's Method")
+```
+
+Jeg vurderer ud fra figuren at der er fire clusters. Dem vil jeg farvelægge
+
+```{r}
+k <- 4
+clusters <- cutree(hc, k = k)
+dend_color <- color_branches(dend, k=k)
+plot(dend_color, main="Hierarchical Clustering with Ward's Method")
+```
+
+### Ggraph
+
+For at tilføje clusters til netværket skal man lave en ny kolonne med `mutate()`.
+
+```{r}
+network |>
+  mutate(cluster = clusters |> 
+           as.character(),
+         degree = centrality_degree()) |> 
+  ggraph(layout = "stress") +
+  geom_edge_link() +
+  geom_node_point(
+    aes(
+      color = cluster,
+      shape = job_name,
+      size = degree
+    )
+    ) +
+  labs(
+    color = "Cluster",
+    shape = "Stilling",
+    size = "Centralitet"
+  ) +
+  scale_color_viridis(discrete = TRUE, option = "turbo") +
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+
+
+

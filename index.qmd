@@ -5,6 +5,7 @@ listing:
     - "Lektion 1/Lektion 1.qmd"
     - "Lektion 2/Lektion 2.qmd"
     - "Lektion 3/Lektion 3.qmd"
+    - "Lektion 4/Lektion 4.qmd"
   sort: "date desc"
 toc: false
 author: ""
