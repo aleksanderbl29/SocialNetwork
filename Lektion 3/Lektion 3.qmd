@@ -1,0 +1,110 @@
+---
+title: "Lektion 3"
+date: 2025-02-24
+---
+
+I har lavet i forvejen løst opgaven:
+- ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”
+
+**Nu skal I løse opgaverne:**
+- Lav en edgelist i excel, pba. af jeres netværk.
+- Lav en nodelist i excel. Bestem nodernes organisatoriske roller.
+- Importer excel-filerne til R, og dan en graf ud af dem.
+- Beregn 3 centralitetsmål for noderne.
+- Visualiser netværket. Lad nodestørrelse være bestemt af centralitet og lad farve/form være bestemt af organisatorisk rolle.
+
+## Lav edge- og nodelist i excelark
+
+Først indlæser vi alle de nødvendige pakker
+
+```{r pkgs}
+#| output: false
+library(tidyverse)
+library(tidygraph)
+library(ggraph)
+```
+
+Jeg importerer de to filer med `{readxl}`.
+
+```{r}
+e <- readxl::read_excel("Lektion 3/edgelist.xlsx")
+n <- readxl::read_excel("Lektion 3/nodelist.xlsx")
+```
+
+Så kan vi inspicere de to datasæt
+
+```{r}
+head(e, 2)
+head(n, 2)
+```
+
+
+## Dan graf med noder og kanter
+
+```{r}
+network <- tbl_graph(
+  nodes = n,
+  edges = e,
+  directed = FALSE
+)
+```
+
+Jeg tegner hurtigt netværket for at se, hvordan det ser ud.
+
+```{r}
+network |>
+  ggraph(layout = "stress") +
+  geom_edge_link() +
+  geom_node_point(aes(color = job_name, shape = job_name), size = 4) +
+  scale_color_viridis(
+    discrete = TRUE,
+    option = "turbo"
+  ) +
+  theme_graph()
+```
+
+
+## Beregn 3 centralitetsmål for noderne
+
+Jeg udvælger:
+
+1. Degree centralitet
+1. Betweenness centralitet
+1. Closeness centralitet
+
+### Degree centralitet
+
+```{r}
+network <- network |> 
+  mutate(degree = centrality_degree())
+```
+
+### Betweenness centralitet
+
+```{r}
+network <- network |> 
+  mutate(between = centrality_betweenness())
+```
+
+### Closeness centralitet
+
+```{r}
+network <- network |> 
+  mutate(closeness = centrality_closeness())
+```
+
+```{r}
+network |>
+  ggraph(layout = "stress") +
+  geom_edge_link() +
+  geom_node_point(
+    aes(
+      color = job_name,
+      shape = job_name,
+      size = degree
+    ),
+    size = 4) +
+  scale_color_viridis(discrete = TRUE, option = "turbo") +
+  theme_graph()
+```
+

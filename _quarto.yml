@@ -3,6 +3,7 @@ project:
   preview:
     port: 4200
     browser: false
+  execute-dir: project
 
 author: Aleksander Bang-Larsen
 
