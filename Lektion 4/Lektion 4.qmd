@@ -142,10 +142,7 @@ network |>
     size = "Centralitet"
   ) +
   scale_color_viridis(discrete = TRUE, option = "turbo") +
-  theme_graph() +
-  theme(
-    legend.position = "bottom"
-  )
+  theme_graph()
 ```
 
 
