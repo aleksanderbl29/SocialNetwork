@@ -32,7 +32,35 @@
     "href": "index.html",
     "title": "Opgaver",
     "section": "",
-    "text": "Lektion 2 - Dataindsamling\n\n\n\n\n\n\n\n\n\n\n\n17. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 1 - Generel teori om sociale netværk\n\n\n\n\n\n\n\n\n\n\n\n3. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\nIngen resultater\n\n Tilbage til toppen"
+    "text": "Lektion 3\n\n\n\n\n\n\n\n\n\n\n\n24. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 2 - Dataindsamling\n\n\n\n\n\n\n\n\n\n\n\n17. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 1 - Generel teori om sociale netværk\n\n\n\n\n\n\n\n\n\n\n\n3. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\nIngen resultater\n\n Tilbage til toppen"
+  },
+  {
+    "objectID": "Lektion 3/Lektion 3.html",
+    "href": "Lektion 3/Lektion 3.html",
+    "title": "Lektion 3",
+    "section": "",
+    "text": "I har lavet i forvejen løst opgaven: - ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”\nNu skal I løse opgaverne: - Lav en edgelist i excel, pba. af jeres netværk. - Lav en nodelist i excel. Bestem nodernes organisatoriske roller. - Importer excel-filerne til R, og dan en graf ud af dem. - Beregn 3 centralitetsmål for noderne. - Visualiser netværket. Lad nodestørrelse være bestemt af centralitet og lad farve/form være bestemt af organisatorisk rolle."
+  },
+  {
+    "objectID": "Lektion 3/Lektion 3.html#lav-edge--og-nodelist-i-excelark",
+    "href": "Lektion 3/Lektion 3.html#lav-edge--og-nodelist-i-excelark",
+    "title": "Lektion 3",
+    "section": "Lav edge- og nodelist i excelark",
+    "text": "Lav edge- og nodelist i excelark\nFørst indlæser vi alle de nødvendige pakker\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\n\nJeg importerer de to filer med {readxl}.\n\ne &lt;- readxl::read_excel(\"Lektion 3/edgelist.xlsx\")\nn &lt;- readxl::read_excel(\"Lektion 3/nodelist.xlsx\")\n\nSå kan vi inspicere de to datasæt\n\nhead(e, 2)\n\n# A tibble: 2 × 2\n   from    to\n  &lt;dbl&gt; &lt;dbl&gt;\n1     1    21\n2     2     1\n\nhead(n, 2)\n\n# A tibble: 2 × 5\n     id   job job_name         origin origin_name                          \n  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                                \n1     1     3 Leder                 1 Skræddermarkens Skole                \n2     2     4 Adm. Medarbejder      3 Søndermarkens Integrerede Institution"
+  },
+  {
+    "objectID": "Lektion 3/Lektion 3.html#dan-graf-med-noder-og-kanter",
+    "href": "Lektion 3/Lektion 3.html#dan-graf-med-noder-og-kanter",
+    "title": "Lektion 3",
+    "section": "Dan graf med noder og kanter",
+    "text": "Dan graf med noder og kanter\n\nnetwork &lt;- tbl_graph(\n  nodes = n,\n  edges = e,\n  directed = FALSE\n)\n\nJeg tegner hurtigt netværket for at se, hvordan det ser ud.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\") +\n  geom_edge_link() +\n  geom_node_point(aes(color = job_name, shape = job_name), size = 4) +\n  scale_color_viridis(\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  theme_graph()"
+  },
+  {
+    "objectID": "Lektion 3/Lektion 3.html#beregn-3-centralitetsmål-for-noderne",
+    "href": "Lektion 3/Lektion 3.html#beregn-3-centralitetsmål-for-noderne",
+    "title": "Lektion 3",
+    "section": "Beregn 3 centralitetsmål for noderne",
+    "text": "Beregn 3 centralitetsmål for noderne\nJeg udvælger:\n\nDegree centralitet\nBetweenness centralitet\nCloseness centralitet\n\n\nDegree centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(degree = centrality_degree())\n\n\n\nBetweenness centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(between = centrality_betweenness())\n\n\n\nCloseness centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(closeness = centrality_closeness())\n\n\nnetwork |&gt;\n  ggraph(layout = \"stress\") +\n  geom_edge_link() +\n  geom_node_point(\n    aes(\n      color = job_name,\n      shape = job_name,\n      size = degree\n    ),\n    size = 4) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph()"
   },
   {
     "objectID": "Lektion 2/Lektion 2.html",

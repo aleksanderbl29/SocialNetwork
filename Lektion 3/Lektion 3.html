@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="">
+<meta name="author" content="Aleksander Bang-Larsen">
 
-<title>Licens – Aleksanders netværksanalyser</title>
+<title>Lektion 3 – Aleksanders netværksanalyser</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,25 +21,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ca18fbd2e8790c6568535d603d3b1e7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ca18fbd2e8790c6568535d603d3b1e7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,8 +104,12 @@ ul.task-list li input[type="checkbox"] {
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<meta property="og:title" content="Licens – Aleksanders netværksanalyser">
+<meta property="og:title" content="Lektion 3 – Aleksanders netværksanalyser">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://aleksanderbl.dk/SocialNetwork/Lektion 3/Lektion-3_files/figure-html/unnamed-chunk-4-1.png">
 <meta property="og:site_name" content="Aleksanders netværksanalyser">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 </head>
 
 <body class="nav-fixed">
@@ -81,7 +119,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Aleksanders netværksanalyser</span>
     </a>
   </div>
@@ -92,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Opgaver</span></a>
   </li>  
   <li class="nav-item">
@@ -100,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Link til koden</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./license.html" aria-current="page"> 
+    <a class="nav-link" href="../license.html"> 
 <span class="menu-text">Licens</span></a>
   </li>  
 </ul>
@@ -125,25 +163,42 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">På denne side</h2>
    
   <ul>
-  <li><a href="#opgaver-og-besvarelse" id="toc-opgaver-og-besvarelse" class="nav-link active" data-scroll-target="#opgaver-og-besvarelse">Opgaver og besvarelse</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
-  <li><a href="#kode" id="toc-kode" class="nav-link" data-scroll-target="#kode">Kode</a></li>
+  <li><a href="#lav-edge--og-nodelist-i-excelark" id="toc-lav-edge--og-nodelist-i-excelark" class="nav-link active" data-scroll-target="#lav-edge--og-nodelist-i-excelark">Lav edge- og nodelist i excelark</a></li>
+  <li><a href="#dan-graf-med-noder-og-kanter" id="toc-dan-graf-med-noder-og-kanter" class="nav-link" data-scroll-target="#dan-graf-med-noder-og-kanter">Dan graf med noder og kanter</a></li>
+  <li><a href="#beregn-3-centralitetsmål-for-noderne" id="toc-beregn-3-centralitetsmål-for-noderne" class="nav-link" data-scroll-target="#beregn-3-centralitetsmål-for-noderne">Beregn 3 centralitetsmål for noderne</a>
+  <ul class="collapse">
+  <li><a href="#degree-centralitet" id="toc-degree-centralitet" class="nav-link" data-scroll-target="#degree-centralitet">Degree centralitet</a></li>
+  <li><a href="#betweenness-centralitet" id="toc-betweenness-centralitet" class="nav-link" data-scroll-target="#betweenness-centralitet">Betweenness centralitet</a></li>
+  <li><a href="#closeness-centralitet" id="toc-closeness-centralitet" class="nav-link" data-scroll-target="#closeness-centralitet">Closeness centralitet</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/license.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/license.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Licens</h1>
+<h1 class="title">Lektion 3</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Forfatter</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aleksander Bang-Larsen </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Udgivet</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">24. februar 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -153,35 +208,122 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="opgaver-og-besvarelse" class="level2">
-<h2 class="anchored" data-anchor-id="opgaver-og-besvarelse">Opgaver og besvarelse</h2>
-<ul>
-<li>Opgavebesvarelser på denne side er underlagt © Copyright 2025, Aleksander Bang-Larsen</li>
-<li>Opgaverne er stillet af Jens Peter Andersen &amp; Emil Dolmer Alnor under Creative Commons CC-BY.
-<ul>
-<li>Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.</li>
-</ul></li>
-</ul>
+<p>I har lavet i forvejen løst opgaven: - ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”</p>
+<p><strong>Nu skal I løse opgaverne:</strong> - Lav en edgelist i excel, pba. af jeres netværk. - Lav en nodelist i excel. Bestem nodernes organisatoriske roller. - Importer excel-filerne til R, og dan en graf ud af dem. - Beregn 3 centralitetsmål for noderne. - Visualiser netværket. Lad nodestørrelse være bestemt af centralitet og lad farve/form være bestemt af organisatorisk rolle.</p>
+<section id="lav-edge--og-nodelist-i-excelark" class="level2">
+<h2 class="anchored" data-anchor-id="lav-edge--og-nodelist-i-excelark">Lav edge- og nodelist i excelark</h2>
+<p>Først indlæser vi alle de nødvendige pakker</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Jeg importerer de to filer med <code>{readxl}</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/edgelist.xlsx"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/nodelist.xlsx"</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Så kan vi inspicere de to datasæt</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(e, <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+   from    to
+  &lt;dbl&gt; &lt;dbl&gt;
+1     1    21
+2     2     1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(n, <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+     id   job job_name         origin origin_name                          
+  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                                
+1     1     3 Leder                 1 Skræddermarkens Skole                
+2     2     4 Adm. Medarbejder      3 Søndermarkens Integrerede Institution</code></pre>
+</div>
+</div>
 </section>
-<section id="data" class="level2">
-<h2 class="anchored" data-anchor-id="data">Data</h2>
-<ul>
-<li>Datamaterialet er under Creative Commons CC-BY medmindre andet er angivet.
-<ul>
-<li>Det betyder, det må deles, tilpasses og genbruges af alle med den rette ophavsangivelse.</li>
-</ul></li>
-</ul>
+<section id="dan-graf-med-noder-og-kanter" class="level2">
+<h2 class="anchored" data-anchor-id="dan-graf-med-noder-og-kanter">Dan graf med noder og kanter</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nodes =</span> n,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">edges =</span> e,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Jeg tegner hurtigt netværket for at se, hvordan det ser ud.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> job_name, <span class="at">shape =</span> job_name), <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">discrete =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">"turbo"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-3_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="kode" class="level2">
-<h2 class="anchored" data-anchor-id="kode">Kode</h2>
-<ul>
-<li>Koden på denne side er udstillet med MIT-licens.
-<ul>
-<li>Det betyder, at du frit kan genbruge, modificere og distribuere koden.</li>
-</ul></li>
-</ul>
+<section id="beregn-3-centralitetsmål-for-noderne" class="level2">
+<h2 class="anchored" data-anchor-id="beregn-3-centralitetsmål-for-noderne">Beregn 3 centralitetsmål for noderne</h2>
+<p>Jeg udvælger:</p>
+<ol type="1">
+<li>Degree centralitet</li>
+<li>Betweenness centralitet</li>
+<li>Closeness centralitet</li>
+</ol>
+<section id="degree-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="degree-centralitet">Degree centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="betweenness-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="betweenness-centralitet">Betweenness centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">between =</span> <span class="fu">centrality_betweenness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="closeness-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="closeness-centralitet">Closeness centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">closeness =</span> <span class="fu">centrality_closeness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> job_name,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> job_name,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> degree</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>, <span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-3_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Tilbage til toppen</a></main> <!-- /main -->
@@ -607,5 +749,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/license.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/license.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
