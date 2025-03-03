@@ -8,7 +8,7 @@
 
 <meta name="author" content="Aleksander Bang-Larsen">
 
-<title>Lektion 3 – Aleksanders netværksanalyser</title>
+<title>Lektion 4 – Aleksanders netværksanalyser</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,9 +104,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>html{ scroll-behavior: smooth; }</style>
 
 
-<meta property="og:title" content="Lektion 3 – Aleksanders netværksanalyser">
+<meta property="og:title" content="Lektion 4 – Aleksanders netværksanalyser">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://aleksanderbl.dk/SocialNetwork/Lektion 3/Lektion-3_files/figure-html/unnamed-chunk-4-1.png">
+<meta property="og:image" content="https://aleksanderbl.dk/SocialNetwork/Lektion 4/Lektion-4_files/figure-html/unnamed-chunk-5-1.png">
 <meta property="og:site_name" content="Aleksanders netværksanalyser">
 <meta property="og:image:height" content="960">
 <meta property="og:image:width" content="1344">
@@ -163,23 +163,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">På denne side</h2>
    
   <ul>
-  <li><a href="#lav-edge--og-nodelist-i-excelark" id="toc-lav-edge--og-nodelist-i-excelark" class="nav-link active" data-scroll-target="#lav-edge--og-nodelist-i-excelark">Lav edge- og nodelist i excelark</a></li>
-  <li><a href="#dan-graf-med-noder-og-kanter" id="toc-dan-graf-med-noder-og-kanter" class="nav-link" data-scroll-target="#dan-graf-med-noder-og-kanter">Dan graf med noder og kanter</a></li>
-  <li><a href="#beregn-3-centralitetsmål-for-noderne" id="toc-beregn-3-centralitetsmål-for-noderne" class="nav-link" data-scroll-target="#beregn-3-centralitetsmål-for-noderne">Beregn 3 centralitetsmål for noderne</a>
+  <li><a href="#indlæs-pakker" id="toc-indlæs-pakker" class="nav-link active" data-scroll-target="#indlæs-pakker">Indlæs pakker</a></li>
+  <li><a href="#kode-fra-sidste-gang" id="toc-kode-fra-sidste-gang" class="nav-link" data-scroll-target="#kode-fra-sidste-gang">Kode fra sidste gang</a></li>
+  <li><a href="#clustering-analyse" id="toc-clustering-analyse" class="nav-link" data-scroll-target="#clustering-analyse">Clustering analyse</a></li>
+  <li><a href="#visualisering" id="toc-visualisering" class="nav-link" data-scroll-target="#visualisering">Visualisering</a>
   <ul class="collapse">
-  <li><a href="#degree-centralitet" id="toc-degree-centralitet" class="nav-link" data-scroll-target="#degree-centralitet">Degree centralitet</a></li>
-  <li><a href="#betweenness-centralitet" id="toc-betweenness-centralitet" class="nav-link" data-scroll-target="#betweenness-centralitet">Betweenness centralitet</a></li>
-  <li><a href="#closeness-centralitet" id="toc-closeness-centralitet" class="nav-link" data-scroll-target="#closeness-centralitet">Closeness centralitet</a></li>
+  <li><a href="#corrplot" id="toc-corrplot" class="nav-link" data-scroll-target="#corrplot">Corrplot</a></li>
+  <li><a href="#dendogram" id="toc-dendogram" class="nav-link" data-scroll-target="#dendogram">Dendogram</a></li>
+  <li><a href="#ggraph" id="toc-ggraph" class="nav-link" data-scroll-target="#ggraph">Ggraph</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 4/Lektion 4.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 4/Lektion 4.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lektion 3</h1>
+<h1 class="title">Lektion 4</h1>
 </div>
 
 
@@ -196,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Udgivet</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">24. februar 2025</p>
+      <p class="date">3. marts 2025</p>
     </div>
   </div>
   
@@ -208,129 +209,156 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>I har lavet i forvejen løst opgaven: - ”Find papir og pen frem og tegn netværket, som I forestiller jer det så ud 1 måned efter sammenlægningen. Visualiser nodernes forskellige organisatoriske roller (lærer/pædagog, medarbejder/leder, osv.). For at gøre tegneopgaven overskuelig, kan I tage udgangspunkt i, at organisationerne havde få ansatte.”</p>
-<p><strong>Nu skal I løse opgaverne:</strong></p>
+<p>Vi arbejder videre med øvelsen fra sidste gang.</p>
+<p>Hvis I når at blive færdige, prøv at lave en clustering på baggrund af cosinus-lighed.</p>
 <ul>
-<li>Lav en edgelist i excel, pba. af jeres netværk.</li>
-<li>Lav en nodelist i excel. Bestem nodernes organisatoriske roller.</li>
-<li>Importer excel-filerne til R, og dan en graf ud af dem.</li>
-<li>Beregn 3 centralitetsmål for noderne.</li>
-<li>Visualiser netværket. Lad nodestørrelse være bestemt af centralitet og lad farve/form være bestemt af organisatorisk rolle.</li>
+<li>Jeg nåede at blive færdig, så her laver vi cluster analyse.</li>
 </ul>
-<section id="lav-edge--og-nodelist-i-excelark" class="level2">
-<h2 class="anchored" data-anchor-id="lav-edge--og-nodelist-i-excelark">Lav edge- og nodelist i excelark</h2>
-<p>Først indlæser vi alle de nødvendige pakker</p>
+<section id="indlæs-pakker" class="level2">
+<h2 class="anchored" data-anchor-id="indlæs-pakker">Indlæs pakker</h2>
+<p>Først skal vi indlæse de nødvendige pakker. Jeg sætter også et <code>seed</code> for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Jeg importerer de to filer med <code>{readxl}</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/edgelist.xlsx"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/nodelist.xlsx"</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Så kan vi inspicere de to datasæt</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(e, <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-   from    to
-  &lt;dbl&gt; &lt;dbl&gt;
-1     1    32
-2     2    14</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(n, <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-     id   job job_name         origin origin_name                          
-  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                                
-1     1     3 Leder                 1 Skræddermarkens Skole                
-2     2     4 Adm. Medarbejder      3 Søndermarkens Integrerede Institution</code></pre>
-</div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dendextend)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="dan-graf-med-noder-og-kanter" class="level2">
-<h2 class="anchored" data-anchor-id="dan-graf-med-noder-og-kanter">Dan graf med noder og kanter</h2>
+<section id="kode-fra-sidste-gang" class="level2">
+<h2 class="anchored" data-anchor-id="kode-fra-sidste-gang">Kode fra sidste gang</h2>
+<p>Før jeg kan begynde på cluster analysen skal jeg have opbygget netværket fra sidste gang.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nodes =</span> n,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">edges =</span> e,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/edgelist.xlsx"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"Lektion 3/nodelist.xlsx"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nodes =</span> n,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">edges =</span> e,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">directed =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Jeg tegner hurtigt netværket for at se, hvordan det ser ud.</p>
+</section>
+<section id="clustering-analyse" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-analyse">Clustering analyse</h2>
+<p>Først skal vi convertere edgelisten til en adjacency matrix.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> job_name, <span class="at">shape =</span> job_name), <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">discrete =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">"turbo"</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>adj_mat <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_adjacency_matrix</span>(network)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Jeg definerer en funktion til at udregne similaritets-matricen</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sim_mat <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(adj_mat)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  sim_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n, <span class="at">ncol =</span> n)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      numerator <span class="ot">&lt;-</span> <span class="fu">sum</span>(m[i, ] <span class="sc">*</span> m[j, ])</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      denominator <span class="ot">&lt;-</span> (<span class="fu">sqrt</span>(<span class="fu">sum</span>(m[i, ]<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(m[j, ]<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (denominator <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        cosine <span class="ot">&lt;-</span> numerator <span class="sc">/</span> denominator</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        cosine <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      sim_matrix[i, j] <span class="ot">&lt;-</span> cosine</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  (sim_matrix)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Herefter udregner jeg en similaritetsmatrice for mit netværk.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sm <span class="ot">&lt;-</span> <span class="fu">sim_mat</span>(adj_mat)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualisering" class="level2">
+<h2 class="anchored" data-anchor-id="visualisering">Visualisering</h2>
+<p>For at visualisere matricen vil jeg først bruge corrplot og dernæst et dendogram. Til sidst vil jeg forsøge at tilføje clusters til mit ggplot (ggpraph).</p>
+<section id="corrplot" class="level3">
+<h3 class="anchored" data-anchor-id="corrplot">Corrplot</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>corrplot<span class="sc">::</span><span class="fu">corrplot</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  sm,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># type = "lower",</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">hclust.method =</span> <span class="st">"ward.D2"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">addrect =</span> <span class="dv">4</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">rect.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="st">"hclust"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">is.corr =</span> <span class="cn">FALSE</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Lektion-3_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Lektion-4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="beregn-3-centralitetsmål-for-noderne" class="level2">
-<h2 class="anchored" data-anchor-id="beregn-3-centralitetsmål-for-noderne">Beregn 3 centralitetsmål for noderne</h2>
-<p>Jeg udvælger:</p>
-<ol type="1">
-<li>Degree centralitet</li>
-<li>Betweenness centralitet</li>
-<li>Closeness centralitet</li>
-</ol>
-<section id="degree-centralitet" class="level3">
-<h3 class="anchored" data-anchor-id="degree-centralitet">Degree centralitet</h3>
+<section id="dendogram" class="level3">
+<h3 class="anchored" data-anchor-id="dendogram">Dendogram</h3>
+<p>Først udregner jeg distancematrice.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> sm</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="betweenness-centralitet" class="level3">
-<h3 class="anchored" data-anchor-id="betweenness-centralitet">Betweenness centralitet</h3>
+<p>Herefter udregner jeg clusterne med <code>ward.D2</code>-metoden og omdanner til dendogram.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">between =</span> <span class="fu">centrality_betweenness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="closeness-centralitet" class="level3">
-<h3 class="anchored" data-anchor-id="closeness-centralitet">Closeness centralitet</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">closeness =</span> <span class="fu">centrality_closeness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">as.dist</span>(d), <span class="at">method=</span><span class="st">"ward.D2"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>dend <span class="ot">&lt;-</span> <span class="fu">as.dendrogram</span>(hc)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> job_name,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> job_name,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> degree</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Stilling"</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="st">"Stilling"</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Centralitet"</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>, <span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dend, <span class="at">main=</span><span class="st">"Hierarchical Clustering with Ward's Method"</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Lektion-3_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Lektion-4_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Jeg vurderer ud fra figuren at der er fire clusters. Dem vil jeg farvelægge</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">k =</span> k)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>dend_color <span class="ot">&lt;-</span> <span class="fu">color_branches</span>(dend, <span class="at">k=</span>k)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dend_color, <span class="at">main=</span><span class="st">"Hierarchical Clustering with Ward's Method"</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-4_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ggraph" class="level3">
+<h3 class="anchored" data-anchor-id="ggraph">Ggraph</h3>
+<p>For at tilføje clusters til netværket skal man lave en ny kolonne med <code>mutate()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cluster =</span> clusters <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">as.character</span>(),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">degree =</span> <span class="fu">centrality_degree</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> cluster,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">shape =</span> job_name,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">size =</span> degree</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Cluster"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="st">"Stilling"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Centralitet"</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>, <span class="at">option =</span> <span class="st">"turbo"</span>) <span class="sc">+</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-4_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -763,5 +791,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 3/Lektion 3.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 4/Lektion 4.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 4/Lektion 4.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></div></div></footer><script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
