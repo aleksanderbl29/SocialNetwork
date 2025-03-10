@@ -11,6 +11,7 @@ lang: da
 
 website:
   title: "Aleksanders netværksanalyser"
+  favicon: .github/favicon_io/favicon.ico
   back-to-top-navigation: true
   page-navigation: true
   repo-url: https://github.com/aleksanderbl29/SocialNetwork

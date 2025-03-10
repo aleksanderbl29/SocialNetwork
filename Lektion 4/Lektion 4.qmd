@@ -15,6 +15,7 @@ Først skal vi indlæse de nødvendige pakker. Jeg sætter også et `seed` for a
 
 ```{r pkgs}
 #| output: false
+set.seed(20250303)
 library(tidyverse)
 library(tidygraph)
 library(ggraph)
