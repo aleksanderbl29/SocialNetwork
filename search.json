@@ -32,7 +32,70 @@
     "href": "index.html",
     "title": "Opgaver",
     "section": "",
-    "text": "Lektion 4\n\n\n\n\n\n\n\n\n\n\n\n3. mar. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 3\n\n\n\n\n\n\n\n\n\n\n\n24. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 2 - Dataindsamling\n\n\n\n\n\n\n\n\n\n\n\n17. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 1 - Generel teori om sociale netværk\n\n\n\n\n\n\n\n\n\n\n\n3. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\nIngen resultater\n\n Tilbage til toppen"
+    "text": "Lektion 5\n\n\n\n\n\n\n\n\n\n\n\n10. mar. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 4\n\n\n\n\n\n\n\n\n\n\n\n3. mar. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 3\n\n\n\n\n\n\n\n\n\n\n\n24. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 2 - Dataindsamling\n\n\n\n\n\n\n\n\n\n\n\n17. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\n\n\n\n\n\n\nLektion 1 - Generel teori om sociale netværk\n\n\n\n\n\n\n\n\n\n\n\n3. feb. 2025\n\n\nAleksander Bang-Larsen\n\n\n\n\n\n\nIngen resultater\n\n Tilbage til toppen"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html",
+    "href": "Lektion 2/Lektion 2.html",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "",
+    "text": "Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.\nVisualisér netværket og afprøve forskellige layout-algoritmer."
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#indlæs-pakker",
+    "href": "Lektion 2/Lektion 2.html#indlæs-pakker",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Indlæs pakker",
+    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\nset.seed(17022025) # Dags dato"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
+    "href": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Generer netværk med 7-10 noder",
+    "text": "Generer netværk med 7-10 noder\nJeg laver netværket med tilfældigt udtræk fra en liste af noder. Jeg har valgt at det skal være directed. Først skal vi vælge, hvem der skal være med i netværket. I mit fiktive scenarie vælger jeg politikere og lobbyister. De får alle et bogstav til at identificere sig med.\n\nnetwork_names &lt;- tibble(name = paste(c(\"Politiker\", \"Lobbyist\"), LETTERS[1:10]))\nprint(network_names$name)\n\n [1] \"Politiker A\" \"Lobbyist B\"  \"Politiker C\" \"Lobbyist D\"  \"Politiker E\"\n [6] \"Lobbyist F\"  \"Politiker G\" \"Lobbyist H\"  \"Politiker I\" \"Lobbyist J\" \n\n\nNu har vi navne-vectoren (egentlig navne-kolonnen). Det næste jeg skal producere er en tibble med minimum from og to kolonner. Her starter jeg med at gentage noderne \\(1-7\\). De bliver forbundet med noder der tilfældigt udtrækkes fra en vector \\(4-10\\). På den måde får jeg noder der er mere og mindre forbundet. Udover to og from kolonnerne laver jeg også en tilfældigt udtræk af en vægt for hver kant. De vægter inddeler jeg også i hver sin kvartil.\n\nnetwork_edges &lt;- tibble(\n  from = rep(1:7, 3),\n  to = sample(4:10, length(from), replace = TRUE),\n  rand_weight = runif(length(from)),\n  quantile = cut(\n    rand_weight,\n    breaks = quantile(rand_weight, probs = seq(0, 1, 0.25)),\n    labels = c(\"Q1\", \"Q2\", \"Q3\", \"Q4\"),\n    include.lowest = TRUE\n  )\n)\n\nHer er netværkets kanter så genereret som tibble. Det kan vi inputte, sammen med nodernes navne. Derudover specificerer jeg også at netværket skal være directed.\n\nnetwork &lt;- tbl_graph(\n  nodes = network_names,\n  edges = network_edges,\n  directed = TRUE\n)"
+  },
+  {
+    "objectID": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
+    "href": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
+    "title": "Lektion 2 - Dataindsamling",
+    "section": "Herefter printer vi netværket",
+    "text": "Herefter printer vi netværket\nJeg bruger stress-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\", weights = rand_weight) +\n  geom_edge_link(\n    arrow = arrow(length = unit(4, \"mm\"), type = \"closed\"),\n    aes(color = quantile)\n  ) +\n  geom_node_point() +\n  geom_node_label(\n    aes(label = name),\n    repel = TRUE\n  ) +\n  scale_edge_color_viridis(\n    name = \"Vægt kvartil\",\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  coord_cartesian(clip = \"off\") + # For at labels ikke \"clippes\" når de går længere ud end grafen.\n  theme_graph()"
+  },
+  {
+    "objectID": "Lektion 4/Lektion 4.html",
+    "href": "Lektion 4/Lektion 4.html",
+    "title": "Lektion 4",
+    "section": "",
+    "text": "Vi arbejder videre med øvelsen fra sidste gang.\nHvis I når at blive færdige, prøv at lave en clustering på baggrund af cosinus-lighed."
+  },
+  {
+    "objectID": "Lektion 4/Lektion 4.html#indlæs-pakker",
+    "href": "Lektion 4/Lektion 4.html#indlæs-pakker",
+    "title": "Lektion 4",
+    "section": "Indlæs pakker",
+    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nset.seed(20250303)\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\nlibrary(igraph)\nlibrary(dendextend)"
+  },
+  {
+    "objectID": "Lektion 4/Lektion 4.html#kode-fra-sidste-gang",
+    "href": "Lektion 4/Lektion 4.html#kode-fra-sidste-gang",
+    "title": "Lektion 4",
+    "section": "Kode fra sidste gang",
+    "text": "Kode fra sidste gang\nFør jeg kan begynde på cluster analysen skal jeg have opbygget netværket fra sidste gang.\n\ne &lt;- readxl::read_excel(\"Lektion 3/edgelist.xlsx\")\nn &lt;- readxl::read_excel(\"Lektion 3/nodelist.xlsx\")\nnetwork &lt;- tbl_graph(\n  nodes = n,\n  edges = e,\n  directed = FALSE\n)"
+  },
+  {
+    "objectID": "Lektion 4/Lektion 4.html#clustering-analyse",
+    "href": "Lektion 4/Lektion 4.html#clustering-analyse",
+    "title": "Lektion 4",
+    "section": "Clustering analyse",
+    "text": "Clustering analyse\nFørst skal vi convertere edgelisten til en adjacency matrix.\n\nadj_mat &lt;- igraph::as_adjacency_matrix(network)\n\nJeg definerer en funktion til at udregne similaritets-matricen\n\nsim_mat &lt;- function(m) {\n  n &lt;- nrow(adj_mat)\n  sim_matrix &lt;- matrix(0, nrow = n, ncol = n)\n  for (i in 1:n) {\n    for (j in 1:n) {\n      numerator &lt;- sum(m[i, ] * m[j, ])\n      denominator &lt;- (sqrt(sum(m[i, ]^2)) * sqrt(sum(m[j, ]^2)))\n      if (denominator &gt; 0) {\n        cosine &lt;- numerator / denominator\n      } else {\n        cosine &lt;- 0\n      }\n      sim_matrix[i, j] &lt;- cosine\n    }\n  }\n  (sim_matrix)\n}\n\nHerefter udregner jeg en similaritetsmatrice for mit netværk.\n\nsm &lt;- sim_mat(adj_mat)"
+  },
+  {
+    "objectID": "Lektion 4/Lektion 4.html#visualisering",
+    "href": "Lektion 4/Lektion 4.html#visualisering",
+    "title": "Lektion 4",
+    "section": "Visualisering",
+    "text": "Visualisering\nFor at visualisere matricen vil jeg først bruge corrplot og dernæst et dendogram. Til sidst vil jeg forsøge at tilføje clusters til mit ggplot (ggpraph).\n\nCorrplot\n\ncorrplot::corrplot(\n  sm,\n  # type = \"lower\",\n  hclust.method = \"ward.D2\",\n  addrect = 4,\n  rect.col = \"black\",\n  order = \"hclust\",\n  is.corr = FALSE)\n\n\n\n\n\n\n\n\n\n\nDendogram\nFørst udregner jeg distancematrice.\n\nd &lt;- 1 - sm\n\nHerefter udregner jeg clusterne med ward.D2-metoden og omdanner til dendogram.\n\nhc &lt;- hclust(as.dist(d), method=\"ward.D2\")\ndend &lt;- as.dendrogram(hc)\n\n\nplot(dend, main=\"Hierarchical Clustering with Ward's Method\")\n\n\n\n\n\n\n\n\nJeg vurderer ud fra figuren at der er fire clusters. Dem vil jeg farvelægge\n\nk &lt;- 4\nclusters &lt;- cutree(hc, k = k)\ndend_color &lt;- color_branches(dend, k=k)\nplot(dend_color, main=\"Hierarchical Clustering with Ward's Method\")\n\n\n\n\n\n\n\n\n\n\nGgraph\nFor at tilføje clusters til netværket skal man lave en ny kolonne med mutate().\n\nnetwork |&gt;\n  mutate(cluster = clusters |&gt; \n           as.character(),\n         degree = centrality_degree()) |&gt; \n  ggraph(layout = \"stress\") +\n  geom_edge_link() +\n  geom_node_point(\n    aes(\n      color = cluster,\n      shape = job_name,\n      size = degree\n    )\n    ) +\n  labs(\n    color = \"Cluster\",\n    shape = \"Stilling\",\n    size = \"Centralitet\"\n  ) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph()"
   },
   {
     "objectID": "Lektion 3/Lektion 3.html",
@@ -63,67 +126,60 @@
     "text": "Beregn 3 centralitetsmål for noderne\nJeg udvælger:\n\nDegree centralitet\nBetweenness centralitet\nCloseness centralitet\n\n\nDegree centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(degree = centrality_degree())\n\n\n\nBetweenness centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(between = centrality_betweenness())\n\n\n\nCloseness centralitet\n\nnetwork &lt;- network |&gt; \n  mutate(closeness = centrality_closeness())\n\n\nnetwork |&gt;\n  ggraph(layout = \"stress\") +\n  geom_edge_link() +\n  geom_node_point(\n    aes(\n      color = job_name,\n      shape = job_name,\n      size = degree\n    )) +\n  labs(\n    color = \"Stilling\",\n    shape = \"Stilling\",\n    size = \"Centralitet\"\n  ) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph() +\n  theme(\n    legend.position = \"bottom\"\n  )"
   },
   {
-    "objectID": "Lektion 4/Lektion 4.html",
-    "href": "Lektion 4/Lektion 4.html",
-    "title": "Lektion 4",
+    "objectID": "Lektion 5/Lektion 5.html",
+    "href": "Lektion 5/Lektion 5.html",
+    "title": "Lektion 5",
     "section": "",
-    "text": "Vi arbejder videre med øvelsen fra sidste gang.\nHvis I når at blive færdige, prøv at lave en clustering på baggrund af cosinus-lighed."
+    "text": "Find siden: https://correlatesofwar.org/\nUdvælg og download et datasæt.\nFå vist netværket med noder og edges.\nAfprøv tre forskellige layout-algoritmer, og diskutér forskellene.\nInden næste gang, modtager jeg gerne en kort refleksionsnote om sidste punkt. Det kan med fordel afleveres som en R markdown notebook (i HTML format) i Brightspace."
   },
   {
-    "objectID": "Lektion 4/Lektion 4.html#indlæs-pakker",
-    "href": "Lektion 4/Lektion 4.html#indlæs-pakker",
-    "title": "Lektion 4",
+    "objectID": "Lektion 5/Lektion 5.html#indlæs-pakker",
+    "href": "Lektion 5/Lektion 5.html#indlæs-pakker",
+    "title": "Lektion 5",
     "section": "Indlæs pakker",
-    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\nlibrary(igraph)\nlibrary(dendextend)"
+    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nset.seed(20250310)\nlibrary(igraph)\nlibrary(ggraph)\nlibrary(tidygraph)\nlibrary(tidyverse)"
   },
   {
-    "objectID": "Lektion 4/Lektion 4.html#kode-fra-sidste-gang",
-    "href": "Lektion 4/Lektion 4.html#kode-fra-sidste-gang",
-    "title": "Lektion 4",
-    "section": "Kode fra sidste gang",
-    "text": "Kode fra sidste gang\nFør jeg kan begynde på cluster analysen skal jeg have opbygget netværket fra sidste gang.\n\ne &lt;- readxl::read_excel(\"Lektion 3/edgelist.xlsx\")\nn &lt;- readxl::read_excel(\"Lektion 3/nodelist.xlsx\")\nnetwork &lt;- tbl_graph(\n  nodes = n,\n  edges = e,\n  directed = FALSE\n)"
+    "objectID": "Lektion 5/Lektion 5.html#udvælg-datasæt",
+    "href": "Lektion 5/Lektion 5.html#udvælg-datasæt",
+    "title": "Lektion 5",
+    "section": "Udvælg datasæt",
+    "text": "Udvælg datasæt\nJeg vælger diplomatic exchange datasættet. Det henter jeg fra csv til denne sesison.\n\ncow &lt;- read_csv(\"https://correlatesofwar.org/wp-content/uploads/Diplomatic_Exchange_2006v1.csv\")\n\nJeg inspicerer hurtigt de første par rækker af datasættet.\n\nhead(cow, 4) |&gt;\n  tinytable::tt()\n\n\n\nTabel 1: Udsnit af det rå datasæt.\n\n\n\n\n\n    \n\n    \n    \n      \n        \n        \n              \n                ccode1\n                ccode2\n                year\n                DR_at_1\n                DR_at_2\n                DE\n                version\n              \n        \n        \n        \n                \n                  2\n                  20\n                  1920\n                  0\n                  0\n                  0\n                  2006.1\n                \n                \n                  2\n                  20\n                  1925\n                  0\n                  0\n                  0\n                  2006.1\n                \n                \n                  2\n                  20\n                  1930\n                  0\n                  2\n                  1\n                  2006.1\n                \n                \n                  2\n                  20\n                  1935\n                  2\n                  2\n                  1\n                  2006.1\n                \n        \n      \n    \n\n\n\n\n\n\nKolonnerne ccode1 og ccode2 er identifikator for de to landes diplomatiske interaktion der som kanten findes for. I kolonnen DE findes en binær indikator for diplomatisk interaktion mellem de to lande. Kolonnen year beskriver det år for hvilket data er indsamlet. Kolonnerne DR_at_1 og DR_at_2 beskriver hhv. det diplomatiske engagement for land 2 i land 1 og omvendt."
   },
   {
-    "objectID": "Lektion 4/Lektion 4.html#clustering-analyse",
-    "href": "Lektion 4/Lektion 4.html#clustering-analyse",
-    "title": "Lektion 4",
-    "section": "Clustering analyse",
-    "text": "Clustering analyse\nFørst skal vi convertere edgelisten til en adjacency matrix.\n\nadj_mat &lt;- igraph::as_adjacency_matrix(network)\n\nJeg definerer en funktion til at udregne similaritets-matricen\n\nsim_mat &lt;- function(m) {\n  n &lt;- nrow(adj_mat)\n  sim_matrix &lt;- matrix(0, nrow = n, ncol = n)\n  for (i in 1:n) {\n    for (j in 1:n) {\n      numerator &lt;- sum(m[i, ] * m[j, ])\n      denominator &lt;- (sqrt(sum(m[i, ]^2)) * sqrt(sum(m[j, ]^2)))\n      if (denominator &gt; 0) {\n        cosine &lt;- numerator / denominator\n      } else {\n        cosine &lt;- 0\n      }\n      sim_matrix[i, j] &lt;- cosine\n    }\n  }\n  (sim_matrix)\n}\n\nHerefter udregner jeg en similaritetsmatrice for mit netværk.\n\nsm &lt;- sim_mat(adj_mat)"
+    "objectID": "Lektion 5/Lektion 5.html#datafiltrering",
+    "href": "Lektion 5/Lektion 5.html#datafiltrering",
+    "title": "Lektion 5",
+    "section": "Datafiltrering",
+    "text": "Datafiltrering\nFor at simplificere visualiserinng og udregning en smule vil jeg filtrere på et årstal i datasættet. For at gør det har jeg udtrukket alle årstal og vælger en af disse\n\nyears &lt;- cow$year |&gt; \n  unique()\nprint(years)\n\n [1] 1920 1925 1930 1935 1940 1950 1955 1960 1965 1970 1975 1980 1985 1990 1995\n[16] 2000 2005 1904 1909 1914 1859 1864 1869 1874 1879 1884 1889 1894 1899 1832\n[31] 1836 1840 1844 1849 1854 1827 1817 1824\n\nfilter_year &lt;- years[16]\n\nJeg har valgt året 2000."
   },
   {
-    "objectID": "Lektion 4/Lektion 4.html#visualisering",
-    "href": "Lektion 4/Lektion 4.html#visualisering",
-    "title": "Lektion 4",
-    "section": "Visualisering",
-    "text": "Visualisering\nFor at visualisere matricen vil jeg først bruge corrplot og dernæst et dendogram. Til sidst vil jeg forsøge at tilføje clusters til mit ggplot (ggpraph).\n\nCorrplot\n\ncorrplot::corrplot(\n  sm,\n  # type = \"lower\",\n  hclust.method = \"ward.D2\",\n  addrect = 4,\n  rect.col = \"black\",\n  order = \"hclust\",\n  is.corr = FALSE)\n\n\n\n\n\n\n\n\n\n\nDendogram\nFørst udregner jeg distancematrice.\n\nd &lt;- 1 - sm\n\nHerefter udregner jeg clusterne med ward.D2-metoden og omdanner til dendogram.\n\nhc &lt;- hclust(as.dist(d), method=\"ward.D2\")\ndend &lt;- as.dendrogram(hc)\n\n\nplot(dend, main=\"Hierarchical Clustering with Ward's Method\")\n\n\n\n\n\n\n\n\nJeg vurderer ud fra figuren at der er fire clusters. Dem vil jeg farvelægge\n\nk &lt;- 4\nclusters &lt;- cutree(hc, k = k)\ndend_color &lt;- color_branches(dend, k=k)\nplot(dend_color, main=\"Hierarchical Clustering with Ward's Method\")\n\n\n\n\n\n\n\n\n\n\nGgraph\nFor at tilføje clusters til netværket skal man lave en ny kolonne med mutate().\n\nnetwork |&gt;\n  mutate(cluster = clusters |&gt; \n           as.character(),\n         degree = centrality_degree()) |&gt; \n  ggraph(layout = \"stress\") +\n  geom_edge_link() +\n  geom_node_point(\n    aes(\n      color = cluster,\n      shape = job_name,\n      size = degree\n    )\n    ) +\n  labs(\n    color = \"Cluster\",\n    shape = \"Stilling\",\n    size = \"Centralitet\"\n  ) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph()"
+    "objectID": "Lektion 5/Lektion 5.html#edgelist",
+    "href": "Lektion 5/Lektion 5.html#edgelist",
+    "title": "Lektion 5",
+    "section": "Edgelist",
+    "text": "Edgelist\nFor at kunne omdanne datasættet vi så i Tabel 1 til en edgelist med from og to kolonner skal vi først pivotere datasættet til langt format. Herefter skal vi finde from og to værdier på baggrund af kolonnerne DR_at_1 og DR_at_2. Til sidst omdanner vi de numeriske værdier i from og to kolonnerne til de faktiske navne ved hjælp af countrycode-pakken.\n\nedges &lt;- cow |&gt;\n  filter(\n    year == filter_year,\n    DR_at_1 == 3 | DR_at_2 == 3\n  ) |&gt;\n  pivot_longer(\n    cols = DR_at_1:DR_at_2,\n    names_to = \"dir\",\n    values_to = \"val\"\n  ) |&gt;\n  mutate(\n    from = if_else(\n      dir == \"DR_at_1\", ccode2, ccode1\n    ),\n    to = if_else(\n      dir == \"DR_at_1\", ccode1, ccode2\n    )\n  ) |&gt;\n  select(from, to) |&gt;\n  mutate(\n    from = countrycode::countrycode(\n      sourcevar = from,\n      origin = \"cown\",\n      destination = \"country.name\"\n    ),\n    to = countrycode::countrycode(\n      sourcevar = to,\n      origin = \"cown\",\n      destination = \"country.name\"\n    )\n  )\n\nDet giver en edgelist der ser ud som vi kan se i Tabel 2.\n\nedges |&gt; \n  head(3) |&gt; \n  tinytable::tt()\n\n\n\nTabel 2: Udsnit af edgelist\n\n\n\n\n\n    \n\n    \n    \n      \n        \n        \n              \n                from\n                to\n              \n        \n        \n        \n                \n                  Canada\n                  United States\n                \n                \n                  United States\n                  Canada\n                \n                \n                  Bahamas\n                  United States"
   },
   {
-    "objectID": "Lektion 2/Lektion 2.html",
-    "href": "Lektion 2/Lektion 2.html",
-    "title": "Lektion 2 - Dataindsamling",
-    "section": "",
-    "text": "Lav et fiktivt netværk med 7-10 noder. I vælger selv om det skal være directed eller undirected, og hvilke egenskaber noderne skal have. Formålet er at øve hvordan netværk hænger sammen, og hvordan de kan genereres fra bunden.\nVisualisér netværket og afprøve forskellige layout-algoritmer."
+    "objectID": "Lektion 5/Lektion 5.html#nodelist",
+    "href": "Lektion 5/Lektion 5.html#nodelist",
+    "title": "Lektion 5",
+    "section": "Nodelist",
+    "text": "Nodelist\nFor at kunne omdanne datasættet vi så i Tabel 1 til en nodelist med landenavne. Jeg folder countrycode-kolonnerne ccode1 og ccode2 til en lang variabel. Her tilføjer jeg en variabel med det rigtige navn ved hjælp af countrycode-pakken.\n\nnodes &lt;- cow |&gt;\n  filter(\n    year == filter_year,\n    DR_at_1 == 3 | DR_at_2 == 3\n  ) |&gt;\n  select(ccode1, ccode2) |&gt;\n  pivot_longer(\n    cols = c(ccode1, ccode2),\n    values_to = \"id\",\n    names_to = \"name_cols\"\n  ) |&gt;\n  select(id) |&gt;\n  distinct() |&gt; \n  mutate(\n    name = countrycode::countrycode(\n      sourcevar = id,\n      origin = \"cown\",\n      destination = \"country.name\"\n    ),\n    id = as.character(id)\n  )\n\nDet giver en nodelist der ser ud som vi kan se i Tabel 3.\n\nnodes |&gt; \n  head(3) |&gt; \n  tinytable::tt()\n\n\n\nTabel 3: Udsnit af nodelist\n\n\n\n\n\n    \n\n    \n    \n      \n        \n        \n              \n                id\n                name\n              \n        \n        \n        \n                \n                  2\n                  United States\n                \n                \n                  20\n                  Canada\n                \n                \n                  31\n                  Bahamas"
   },
   {
-    "objectID": "Lektion 2/Lektion 2.html#indlæs-pakker",
-    "href": "Lektion 2/Lektion 2.html#indlæs-pakker",
-    "title": "Lektion 2 - Dataindsamling",
-    "section": "Indlæs pakker",
-    "text": "Indlæs pakker\nFørst skal vi indlæse de nødvendige pakker. Jeg sætter også et seed for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.\n\nlibrary(tidyverse)\nlibrary(tidygraph)\nlibrary(ggraph)\nset.seed(17022025) # Dags dato"
+    "objectID": "Lektion 5/Lektion 5.html#samling-af-netværk",
+    "href": "Lektion 5/Lektion 5.html#samling-af-netværk",
+    "title": "Lektion 5",
+    "section": "Samling af netværk",
+    "text": "Samling af netværk\nTil sidst skal vi samle netværket med tbl_graph().\n\nnetwork &lt;- tbl_graph(\n  nodes = nodes,\n  edges = edges,\n  directed = TRUE\n)"
   },
   {
-    "objectID": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
-    "href": "Lektion 2/Lektion 2.html#generer-netværk-med-7-10-noder",
-    "title": "Lektion 2 - Dataindsamling",
-    "section": "Generer netværk med 7-10 noder",
-    "text": "Generer netværk med 7-10 noder\nJeg laver netværket med tilfældigt udtræk fra en liste af noder. Jeg har valgt at det skal være directed. Først skal vi vælge, hvem der skal være med i netværket. I mit fiktive scenarie vælger jeg politikere og lobbyister. De får alle et bogstav til at identificere sig med.\n\nnetwork_names &lt;- tibble(name = paste(c(\"Politiker\", \"Lobbyist\"), LETTERS[1:10]))\nprint(network_names$name)\n\n [1] \"Politiker A\" \"Lobbyist B\"  \"Politiker C\" \"Lobbyist D\"  \"Politiker E\"\n [6] \"Lobbyist F\"  \"Politiker G\" \"Lobbyist H\"  \"Politiker I\" \"Lobbyist J\" \n\n\nNu har vi navne-vectoren (egentlig navne-kolonnen). Det næste jeg skal producere er en tibble med minimum from og to kolonner. Her starter jeg med at gentage noderne \\(1-7\\). De bliver forbundet med noder der tilfældigt udtrækkes fra en vector \\(4-10\\). På den måde får jeg noder der er mere og mindre forbundet. Udover to og from kolonnerne laver jeg også en tilfældigt udtræk af en vægt for hver kant. De vægter inddeler jeg også i hver sin kvartil.\n\nnetwork_edges &lt;- tibble(\n  from = rep(1:7, 3),\n  to = sample(4:10, length(from), replace = TRUE),\n  rand_weight = runif(length(from)),\n  quantile = cut(\n    rand_weight,\n    breaks = quantile(rand_weight, probs = seq(0, 1, 0.25)),\n    labels = c(\"Q1\", \"Q2\", \"Q3\", \"Q4\"),\n    include.lowest = TRUE\n  )\n)\n\nHer er netværkets kanter så genereret som tibble. Det kan vi inputte, sammen med nodernes navne. Derudover specificerer jeg også at netværket skal være directed.\n\nnetwork &lt;- tbl_graph(\n  nodes = network_names,\n  edges = network_edges,\n  directed = TRUE\n)"
-  },
-  {
-    "objectID": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
-    "href": "Lektion 2/Lektion 2.html#herefter-printer-vi-netværket",
-    "title": "Lektion 2 - Dataindsamling",
-    "section": "Herefter printer vi netværket",
-    "text": "Herefter printer vi netværket\nJeg bruger stress-layout og plotter grafen med de tilfældige vægte. Jeg farver kanterne efter den kvartil af vægt de lander i og giver dem en lukket pil. Jeg tilføjer også labels med personernes navne.\n\nnetwork |&gt;\n  ggraph(layout = \"stress\", weights = rand_weight) +\n  geom_edge_link(\n    arrow = arrow(length = unit(4, \"mm\"), type = \"closed\"),\n    aes(color = quantile)\n  ) +\n  geom_node_point() +\n  geom_node_label(\n    aes(label = name),\n    repel = TRUE\n  ) +\n  scale_edge_color_viridis(\n    name = \"Vægt kvartil\",\n    discrete = TRUE,\n    option = \"turbo\"\n  ) +\n  coord_cartesian(clip = \"off\") + # For at labels ikke \"clippes\" når de går længere ud end grafen.\n  theme_graph()"
+    "objectID": "Lektion 5/Lektion 5.html#visualisering-af-netværk-med-3-forskellige-layouts",
+    "href": "Lektion 5/Lektion 5.html#visualisering-af-netværk-med-3-forskellige-layouts",
+    "title": "Lektion 5",
+    "section": "Visualisering af netværk med 3 forskellige layouts",
+    "text": "Visualisering af netværk med 3 forskellige layouts\n\nKamada-Kawai\n\nnetwork |&gt;\n  ggraph(layout = \"kk\") +\n  geom_edge_link() +\n  geom_node_point(aes(color = name)) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph() +\n  theme(\n    legend.position = \"none\"\n  )\n\n\n\n\n\n\n\n\n\n\nLineær & cirkulær\n\nnetwork |&gt;\n  ggraph(layout = \"linear\", circular = TRUE) +\n  geom_edge_arc(alpha = 0.2) +\n  geom_node_point(aes(color = name)) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph() +\n  theme(\n    legend.position = \"none\"\n  )\n\n\n\n\n\n\n\n\n\n\nFruchterman-Reingold\n\nnetwork |&gt;\n  ggraph(layout = \"fr\")+\n  geom_edge_link(alpha = 0.5) +\n  geom_node_point(aes(color = name)) +\n  scale_color_viridis(discrete = TRUE, option = \"turbo\") +\n  theme_graph() +\n  theme(\n    legend.position = \"none\"\n  )"
   },
   {
     "objectID": "Lektion 1/Lektion 1.html",
