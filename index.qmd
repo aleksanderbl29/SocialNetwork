@@ -7,6 +7,7 @@ listing:
     - "Lektion 3/Lektion 3.qmd"
     - "Lektion 4/Lektion 4.qmd"
     - "Lektion 5/Lektion 5.qmd"
+    - "Lektion 7/Lektion 7.qmd"
   sort: "date desc"
 toc: false
 author: ""

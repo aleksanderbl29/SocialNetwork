@@ -1,0 +1,222 @@
+---
+title: "Lektion 7"
+date: 2025-03-24
+---
+
+- Analyser på datasæt over diplomatic exchange
+- Udregn centralitetsmål
+- Udtræk top 10 for hvert mål
+- Udregn aggregeret mål
+
+## Indlæs pakker
+
+Først skal vi indlæse de nødvendige pakker. Jeg sætter også et `seed` for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.
+
+```{r pkgs}
+#| output: false
+set.seed(20250310)
+library(igraph)
+library(ggraph)
+library(tidygraph)
+library(tidyverse)
+```
+
+
+## Udvælg datasæt
+
+Jeg vælger [*diplomatic exchange* datasættet](https://correlatesofwar.org/data-sets/diplomatic-exchange/). Det henter jeg fra csv til denne sesison.
+
+```{r download}
+#| output: false
+cow <- read_csv("https://correlatesofwar.org/wp-content/uploads/Diplomatic_Exchange_2006v1.csv")
+```
+
+Jeg inspicerer hurtigt de første par rækker af datasættet.
+
+```{r inspect}
+#| label: tbl-inspect
+#| tbl-cap: Udsnit af det rå datasæt.
+head(cow, 4) |>
+  tinytable::tt()
+```
+
+Kolonnerne `ccode1` og `ccode2` er identifikator for de to landes diplomatiske interaktion der som kanten findes for.
+I kolonnen `DE` findes en binær indikator for diplomatisk interaktion mellem de to lande. Kolonnen `year` beskriver det år for hvilket data er indsamlet.
+Kolonnerne `DR_at_1` og `DR_at_2` beskriver hhv. det diplomatiske engagement for land 2 i land 1 og omvendt.
+
+## Datafiltrering
+
+For at simplificere visualiserinng og udregning en smule vil jeg filtrere på et årstal i datasættet. For at gør det har jeg udtrukket alle årstal og vælger en af disse
+
+```{r}
+years <- cow$year |>
+  unique()
+print(years)
+filter_year <- years[17]
+```
+
+Jeg har valgt året `r filter_year`.
+
+## Edgelist
+
+For at kunne omdanne datasættet vi så i @tbl-inspect til en edgelist med `from` og `to` kolonner skal vi først pivotere datasættet til langt format. Herefter skal vi finde `from` og `to` værdier på baggrund af kolonnerne `DR_at_1` og `DR_at_2`. Til sidst omdanner vi de numeriske værdier i `from` og `to` kolonnerne til de faktiske navne ved hjælp af `countrycode`-pakken.
+
+```{r edges}
+edges <- cow |>
+  filter(
+    year == filter_year,
+    DR_at_1 == 3 | DR_at_2 == 3
+  ) |>
+  pivot_longer(
+    cols = DR_at_1:DR_at_2,
+    names_to = "dir",
+    values_to = "val"
+  ) |>
+  mutate(
+    from = if_else(
+      dir == "DR_at_1", ccode2, ccode1
+    ),
+    to = if_else(
+      dir == "DR_at_1", ccode1, ccode2
+    )
+  ) |>
+  select(from, to) |>
+  mutate(
+    from = countrycode::countrycode(
+      sourcevar = from,
+      origin = "cown",
+      destination = "country.name"
+    ),
+    to = countrycode::countrycode(
+      sourcevar = to,
+      origin = "cown",
+      destination = "country.name"
+    )
+  ) |> 
+  distinct()
+```
+
+Det giver en edgelist der ser ud som vi kan se i @tbl-edgelist.
+
+```{r tbl-edgelist}
+#| label: tbl-edgelist
+#| tbl-cap: Udsnit af edgelist
+edges |>
+  head(3) |>
+  tinytable::tt()
+```
+
+## Nodelist
+
+For at kunne omdanne datasættet vi så i @tbl-inspect til en nodelist med landenavne. Jeg folder countrycode-kolonnerne `ccode1` og `ccode2` til en lang variabel. Her tilføjer jeg en variabel med det rigtige navn ved hjælp af `countrycode`-pakken.
+
+```{r nodes}
+nodes <- cow |>
+  filter(
+    year == filter_year,
+    DR_at_1 == 3 | DR_at_2 == 3
+  ) |>
+  select(ccode1, ccode2) |>
+  pivot_longer(
+    cols = c(ccode1, ccode2),
+    values_to = "id",
+    names_to = "name_cols"
+  ) |>
+  select(id) |>
+  distinct() |>
+  mutate(
+    name = countrycode::countrycode(
+      sourcevar = id,
+      origin = "cown",
+      destination = "country.name"
+    ),
+    id = as.character(id)
+  )
+```
+
+Det giver en nodelist der ser ud som vi kan se i @tbl-nodelist.
+
+```{r tbl-nodelist}
+#| label: tbl-nodelist
+#| tbl-cap: Udsnit af nodelist
+nodes |>
+  head(3) |>
+  tinytable::tt()
+```
+
+## Samling af netværk
+
+Til sidst skal vi samle netværket med `tbl_graph()`.
+
+```{r network}
+network <- tbl_graph(
+  nodes = nodes,
+  edges = edges,
+  directed = TRUE
+)
+```
+
+Vi udregner degree, betweenness, closeness og eigen centralitet for netværket.
+
+### Degree centralitet
+
+```{r}
+network <- network |> 
+  mutate(degree = centrality_degree())
+```
+
+### Betweenness centralitet
+
+```{r}
+network <- network |> 
+  mutate(between = centrality_betweenness())
+```
+
+### Closeness centralitet
+
+```{r}
+network <- network |> 
+  mutate(closeness = centrality_closeness())
+```
+
+### Eigen centralitet
+
+```{r}
+network <- network |> 
+  mutate(eigen = centrality_eigen())
+```
+
+### Standardisering af mål
+
+Først definerer vi en funktion til at standardisere observationerne
+
+```{r}
+standardize_var <- function(x) {
+  min_x <- min(x, na.rm = TRUE)
+  max_x <- max(x, na.rm = TRUE)
+  (x - min_x) / (max_x - min_x)
+}
+```
+
+
+```{r}
+network |> 
+  mutate(
+    degree_std = standardize_var(degree),
+    between_std = standardize_var(between),
+    closeness_std = standardize_var(closeness),
+    eigen_std = standardize_var(eigen)
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
