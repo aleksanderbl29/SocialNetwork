@@ -50,10 +50,10 @@ Kolonnerne `DR_at_1` og `DR_at_2` beskriver hhv. det diplomatiske engagement for
 For at simplificere visualiserinng og udregning en smule vil jeg filtrere på et årstal i datasættet. For at gør det har jeg udtrukket alle årstal og vælger en af disse
 
 ```{r}
-years <- cow$year |> 
+years <- cow$year |>
   unique()
 print(years)
-filter_year <- years[16]
+filter_year <- years[18]
 ```
 
 Jeg har valgt året `r filter_year`.
@@ -101,8 +101,8 @@ Det giver en edgelist der ser ud som vi kan se i @tbl-edgelist.
 ```{r tbl-edgelist}
 #| label: tbl-edgelist
 #| tbl-cap: Udsnit af edgelist
-edges |> 
-  head(3) |> 
+edges |>
+  head(3) |>
   tinytable::tt()
 ```
 
@@ -123,7 +123,7 @@ nodes <- cow |>
     names_to = "name_cols"
   ) |>
   select(id) |>
-  distinct() |> 
+  distinct() |>
   mutate(
     name = countrycode::countrycode(
       sourcevar = id,
@@ -139,8 +139,8 @@ Det giver en nodelist der ser ud som vi kan se i @tbl-nodelist.
 ```{r tbl-nodelist}
 #| label: tbl-nodelist
 #| tbl-cap: Udsnit af nodelist
-nodes |> 
-  head(3) |> 
+nodes |>
+  head(3) |>
   tinytable::tt()
 ```
 
@@ -164,12 +164,13 @@ network <- tbl_graph(
 network |>
   ggraph(layout = "kk") +
   geom_edge_link() +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE
+  ) +
   geom_node_point(aes(color = name)) +
   scale_color_viridis(discrete = TRUE, option = "turbo") +
-  theme_graph() +
-  theme(
-    legend.position = "none"
-  )
+  theme_graph()
 ```
 
 ### Lineær & cirkulær
@@ -177,26 +178,28 @@ network |>
 ```{r layout2}
 network |>
   ggraph(layout = "linear", circular = TRUE) +
-  geom_edge_arc(alpha = 0.2) +
+  geom_edge_arc(alpha = 0.5) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE
+  ) +
   geom_node_point(aes(color = name)) +
   scale_color_viridis(discrete = TRUE, option = "turbo") +
-  theme_graph() +
-  theme(
-    legend.position = "none"
-  )
+  theme_graph()
 ```
 
-### Fruchterman-Reingold
+### Davidson-Harel
 
 ```{r layout3}
 network |>
-  ggraph(layout = "fr")+
+  ggraph(layout = "dh")+
   geom_edge_link(alpha = 0.5) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE
+  ) +
   geom_node_point(aes(color = name)) +
   scale_color_viridis(discrete = TRUE, option = "turbo") +
-  theme_graph() +
-  theme(
-    legend.position = "none"
-  )
+  theme_graph()
 ```
 
