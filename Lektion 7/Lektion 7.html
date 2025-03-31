@@ -174,6 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#eigen-centralitet" id="toc-eigen-centralitet" class="nav-link" data-scroll-target="#eigen-centralitet">Eigen centralitet</a></li>
   <li><a href="#standardisering-af-mål" id="toc-standardisering-af-mål" class="nav-link" data-scroll-target="#standardisering-af-mål">Standardisering af mål</a></li>
   </ul></li>
+  <li><a href="#top-10-pr-mål" id="toc-top-10-pr-mål" class="nav-link" data-scroll-target="#top-10-pr-mål">Top 10 pr mål</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/aleksanderbl29/SocialNetwork/edit/main/Lektion 7/Lektion 7.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>Modificer denne side</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/blob/main/Lektion 7/Lektion 7.qmd" target="_blank" class="toc-action"><i class="bi empty"></i>Vis kilde</a></li><li><a href="https://github.com/aleksanderbl29/SocialNetwork/issues/new" target="_blank" class="toc-action"><i class="bi empty"></i>Anmeld problem</a></li></ul></div></nav>
     </div>
@@ -212,10 +213,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <ul>
-<li>Analyser på datasæt over diplomatic exchange</li>
-<li>Udregn centralitetsmål</li>
-<li>Udtræk top 10 for hvert mål</li>
-<li>Udregn aggregeret mål</li>
+<li><p>Analyser på datasæt over diplomatic exchange</p></li>
+<li><p>Udregn centralitetsmål</p></li>
+<li><p>Udtræk top 10 for hvert mål</p></li>
+<li><p>Udregn aggregeret mål</p></li>
+<li><p>Kort beskriver jeres datasæt (handel/krig/diplomati, tidsperiode, geografi osv)</p></li>
+<li><p>Vælger et eller flere centralitetsmål, der kan sige noget om hvem der er “eliten” I jeres netværk. Knyt et par sætninger til hvorfor I vælger de centralitetsmål.</p></li>
+<li><p>En top-10 liste over lande, der performerer bedst på jeres valgte centralitetsmål.</p></li>
 </ul>
 <section id="indlæs-pakker" class="level2">
 <h2 class="anchored" data-anchor-id="indlæs-pakker">Indlæs pakker</h2>
@@ -225,7 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggraph)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="udvælg-datasæt" class="level2">
@@ -400,13 +405,13 @@ Tabel&nbsp;1: Udsnit af det rå datasæt.
 <h2 class="anchored" data-anchor-id="edgelist">Edgelist</h2>
 <p>For at kunne omdanne datasættet vi så i <a href="#tbl-inspect" class="quarto-xref">Tabel&nbsp;1</a> til en edgelist med <code>from</code> og <code>to</code> kolonner skal vi først pivotere datasættet til langt format. Herefter skal vi finde <code>from</code> og <code>to</code> værdier på baggrund af kolonnerne <code>DR_at_1</code> og <code>DR_at_2</code>. Til sidst omdanner vi de numeriske værdier i <code>from</code> og <code>to</code> kolonnerne til de faktiske navne ved hjælp af <code>countrycode</code>-pakken.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> cow <span class="sc">|&gt;</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>edges1 <span class="ot">&lt;-</span> cow <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> filter_year,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    DR_at_1 <span class="sc">==</span> <span class="dv">3</span> <span class="sc">|</span> DR_at_2 <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    DR_at_1 <span class="sc">==</span> <span class="dv">3</span><span class="co"># | DR_at_2 == 3</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> DR_at_1<span class="sc">:</span>DR_at_2,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> DR_at_1,<span class="co">#:DR_at_2,</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"dir"</span>,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"val"</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
@@ -430,8 +435,44 @@ Tabel&nbsp;1: Udsnit af det rå datasæt.
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">origin =</span> <span class="st">"cown"</span>,</span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">destination =</span> <span class="st">"country.name"</span></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>edges2 <span class="ot">&lt;-</span> cow <span class="sc">|&gt;</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> filter_year,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    DR_at_2 <span class="sc">==</span> <span class="dv">3</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> DR_at_1,<span class="co">#:DR_at_2,</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"dir"</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"val"</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> <span class="fu">if_else</span>(</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>      dir <span class="sc">==</span> <span class="st">"DR_at_1"</span>, ccode2, ccode1</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> <span class="fu">if_else</span>(</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>      dir <span class="sc">==</span> <span class="st">"DR_at_1"</span>, ccode1, ccode2</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(from, to) <span class="sc">|&gt;</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> countrycode<span class="sc">::</span><span class="fu">countrycode</span>(</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">sourcevar =</span> from,</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">origin =</span> <span class="st">"cown"</span>,</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">destination =</span> <span class="st">"country.name"</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> countrycode<span class="sc">::</span><span class="fu">countrycode</span>(</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">sourcevar =</span> to,</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">origin =</span> <span class="st">"cown"</span>,</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">destination =</span> <span class="st">"country.name"</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">rbind</span>(edges1, edges2) <span class="sc">|&gt;</span> </span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(from, to)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Det giver en edgelist der ser ud som vi kan se i <a href="#tbl-edgelist" class="quarto-xref">Tabel&nbsp;2</a>.</p>
 <div class="cell">
@@ -533,11 +574,11 @@ Tabel&nbsp;2: Udsnit af edgelist
                   <td>United States</td>
                 </tr>
                 <tr>
+                  <td>Bahamas</td>
                   <td>United States</td>
-                  <td>Canada</td>
                 </tr>
                 <tr>
-                  <td>Bahamas</td>
+                  <td>Haiti</td>
                   <td>United States</td>
                 </tr>
         </tbody>
@@ -706,35 +747,44 @@ Tabel&nbsp;3: Udsnit af nodelist
 <p>Vi udregner degree, betweenness, closeness og eigen centralitet for netværket.</p>
 <section id="degree-centralitet" class="level3">
 <h3 class="anchored" data-anchor-id="degree-centralitet">Degree centralitet</h3>
+<ul>
+<li>Out-degree centralitet</li>
+<li>In-degree centralitet</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">degree =</span> <span class="fu">centrality_degree</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">in_degree =</span> <span class="fu">centrality_degree</span>(<span class="at">mode =</span> <span class="st">"in"</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">out_degree =</span> <span class="fu">centrality_degree</span>(<span class="at">mode =</span> <span class="st">"out"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">degree =</span> <span class="fu">centrality_degree</span>(<span class="at">mode =</span> <span class="st">"out"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="betweenness-centralitet" class="level3">
 <h3 class="anchored" data-anchor-id="betweenness-centralitet">Betweenness centralitet</h3>
+<p>Ud fra en broker-logik giver det god mening at se på betweenness centralitet for at finde ud af, hvem der kan være diplomatiske bindeled mellem stater.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">between =</span> <span class="fu">centrality_betweenness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="closeness-centralitet" class="level3">
 <h3 class="anchored" data-anchor-id="closeness-centralitet">Closeness centralitet</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">closeness =</span> <span class="fu">centrality_closeness</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="eigen-centralitet" class="level3">
 <h3 class="anchored" data-anchor-id="eigen-centralitet">Eigen centralitet</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eigen =</span> <span class="fu">centrality_eigen</span>())</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="standardisering-af-mål" class="level3">
 <h3 class="anchored" data-anchor-id="standardisering-af-mål">Standardisering af mål</h3>
-<p>Først definerer vi en funktion til at standardisere observationerne</p>
+<p>Først definerer vi en funktion til at standardisere observationerne,</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>standardize_var <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  min_x <span class="ot">&lt;-</span> <span class="fu">min</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
@@ -742,47 +792,946 @@ Tabel&nbsp;3: Udsnit af nodelist
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> min_x) <span class="sc">/</span> (max_x <span class="sc">-</span> min_x)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="top-10-pr-mål" class="level2">
+<h2 class="anchored" data-anchor-id="top-10-pr-mål">Top 10 pr mål</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">degree_std =</span> <span class="fu">standardize_var</span>(degree),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">between_std =</span> <span class="fu">standardize_var</span>(between),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">closeness_std =</span> <span class="fu">standardize_var</span>(closeness),</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">eigen_std =</span> <span class="fu">standardize_var</span>(eigen)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tbl_graph: 192 nodes and 8962 edges
-#
-# A directed simple graph with 1 component
-#
-# Node Data: 192 × 10 (active)
-   id    name             degree between closeness  eigen degree_std between_std
-   &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
- 1 2     United States       175 3.37e+3   0.00483 0.984      1       1         
- 2 20    Canada              130 9.51e+2   0.00395 0.880      0.741   0.283     
- 3 31    Bahamas               5 3.48e-1   0.00261 0.0553     0.0230  0.000103  
- 4 41    Haiti                18 1.83e+1   0.00272 0.168      0.0977  0.00543   
- 5 42    Dominican Repub…     34 2.62e+1   0.00285 0.276      0.190   0.00777   
- 6 51    Jamaica              29 1.40e+1   0.00282 0.266      0.161   0.00416   
- 7 52    Trinidad &amp; Toba…     19 2.71e+0   0.00274 0.198      0.103   0.000805  
- 8 53    Barbados              9 2.12e-1   0.00266 0.100      0.0460  0.0000629 
- 9 54    Dominica              6 0         0.00262 0.0753     0.0287  0         
-10 55    Grenada               7 2.20e-2   0.00263 0.0847     0.0345  0.00000653
-# ℹ 182 more rows
-# ℹ 2 more variables: closeness_std &lt;dbl&gt;, eigen_std &lt;dbl&gt;
-#
-# Edge Data: 8,962 × 2
-   from    to
-  &lt;int&gt; &lt;int&gt;
-1     2     1
-2     1     2
-3     3     1
-# ℹ 8,959 more rows</code></pre>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in_degree_std = standardize_var(in_degree),</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># out_degree_std = standardize_var(out_degree),</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">between_std =</span> <span class="fu">standardize_var</span>(between),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">closeness_std =</span> <span class="fu">standardize_var</span>(closeness),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">eigen_std =</span> <span class="fu">standardize_var</span>(eigen)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>network<span class="sc">$</span>agg <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(network[, <span class="fu">c</span>(<span class="st">"degree_std"</span>, <span class="st">"between_std"</span>, <span class="st">"closeness_std"</span>, <span class="st">"eigen_std"</span>)])</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(network) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ID"</span>, <span class="st">"Land"</span>, <span class="st">"Degree"</span>, <span class="st">"Between"</span>, <span class="st">"Closeness"</span>, <span class="st">"Eigen"</span>, <span class="st">"In degree"</span>, <span class="st">"Out degree"</span>, <span class="st">"Degree std"</span>, <span class="st">"Between std"</span>, <span class="st">"Closeness std"</span>, <span class="st">"Eigen std"</span>, <span class="st">"Aggregeret"</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Degree std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_d04jjdyhjywaxqh0qjet(i, j, css_id) {
+          var table = document.getElementById("tinytable_d04jjdyhjywaxqh0qjet");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_d04jjdyhjywaxqh0qjet');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_d04jjdyhjywaxqh0qjet(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_d04jjdyhjywaxqh0qjet");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_rk7w2sve0ai4x6monqpw',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_mxhwsvqfj6vthg1qfztz',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_d04jjdyhjywaxqh0qjet(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_rk7w2sve0ai4x6monqpw, .table th.tinytable_css_rk7w2sve0ai4x6monqpw { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_mxhwsvqfj6vthg1qfztz, .table th.tinytable_css_mxhwsvqfj6vthg1qfztz { border-bottom: solid #d3d8dc 0.1em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_d04jjdyhjywaxqh0qjet" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">Land</th>
+                <th scope="col">Degree std</th>
+                <th scope="col">Between std</th>
+                <th scope="col">Closeness std</th>
+                <th scope="col">Eigen std</th>
+                <th scope="col">Aggregeret</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>United States</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.98</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Belgium</td>
+                  <td>0.94</td>
+                  <td>0.7</td>
+                  <td>0.93</td>
+                  <td>0.98</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>France</td>
+                  <td>0.94</td>
+                  <td>0.59</td>
+                  <td>0.92</td>
+                  <td>1</td>
+                  <td>0.86</td>
+                </tr>
+                <tr>
+                  <td>China</td>
+                  <td>0.91</td>
+                  <td>0.71</td>
+                  <td>0.89</td>
+                  <td>0.97</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td>0.9</td>
+                  <td>0.58</td>
+                  <td>0.87</td>
+                  <td>0.97</td>
+                  <td>0.83</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td>0.87</td>
+                  <td>0.37</td>
+                  <td>0.84</td>
+                  <td>0.99</td>
+                  <td>0.77</td>
+                </tr>
+                <tr>
+                  <td>Russia</td>
+                  <td>0.83</td>
+                  <td>0.29</td>
+                  <td>0.79</td>
+                  <td>0.97</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>Japan</td>
+                  <td>0.78</td>
+                  <td>0.32</td>
+                  <td>0.75</td>
+                  <td>0.93</td>
+                  <td>0.7</td>
+                </tr>
+                <tr>
+                  <td>Italy</td>
+                  <td>0.75</td>
+                  <td>0.21</td>
+                  <td>0.72</td>
+                  <td>0.93</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td>Canada</td>
+                  <td>0.74</td>
+                  <td>0.28</td>
+                  <td>0.71</td>
+                  <td>0.88</td>
+                  <td>0.65</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(in_degree_std)) |&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(out_degree_std)) |&gt;</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Between std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_czgn94d89nbnnkl0ntbe(i, j, css_id) {
+          var table = document.getElementById("tinytable_czgn94d89nbnnkl0ntbe");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_czgn94d89nbnnkl0ntbe');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_czgn94d89nbnnkl0ntbe(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_czgn94d89nbnnkl0ntbe");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_qc4kbc2pd185583b0aen',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_2z0hjmo31tep53rlo4lw',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_czgn94d89nbnnkl0ntbe(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_qc4kbc2pd185583b0aen, .table th.tinytable_css_qc4kbc2pd185583b0aen { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_2z0hjmo31tep53rlo4lw, .table th.tinytable_css_2z0hjmo31tep53rlo4lw { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_czgn94d89nbnnkl0ntbe" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">Land</th>
+                <th scope="col">Degree std</th>
+                <th scope="col">Between std</th>
+                <th scope="col">Closeness std</th>
+                <th scope="col">Eigen std</th>
+                <th scope="col">Aggregeret</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>United States</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.98</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>China</td>
+                  <td>0.91</td>
+                  <td>0.71</td>
+                  <td>0.89</td>
+                  <td>0.97</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>Belgium</td>
+                  <td>0.94</td>
+                  <td>0.7</td>
+                  <td>0.93</td>
+                  <td>0.98</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>France</td>
+                  <td>0.94</td>
+                  <td>0.59</td>
+                  <td>0.92</td>
+                  <td>1</td>
+                  <td>0.86</td>
+                </tr>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td>0.9</td>
+                  <td>0.58</td>
+                  <td>0.87</td>
+                  <td>0.97</td>
+                  <td>0.83</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td>0.87</td>
+                  <td>0.37</td>
+                  <td>0.84</td>
+                  <td>0.99</td>
+                  <td>0.77</td>
+                </tr>
+                <tr>
+                  <td>Japan</td>
+                  <td>0.78</td>
+                  <td>0.32</td>
+                  <td>0.75</td>
+                  <td>0.93</td>
+                  <td>0.7</td>
+                </tr>
+                <tr>
+                  <td>Russia</td>
+                  <td>0.83</td>
+                  <td>0.29</td>
+                  <td>0.79</td>
+                  <td>0.97</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>Canada</td>
+                  <td>0.74</td>
+                  <td>0.28</td>
+                  <td>0.71</td>
+                  <td>0.88</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td>India</td>
+                  <td>0.68</td>
+                  <td>0.22</td>
+                  <td>0.67</td>
+                  <td>0.87</td>
+                  <td>0.61</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Closeness std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_g4ne2hahuv4br9goofbi(i, j, css_id) {
+          var table = document.getElementById("tinytable_g4ne2hahuv4br9goofbi");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_g4ne2hahuv4br9goofbi');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_g4ne2hahuv4br9goofbi(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_g4ne2hahuv4br9goofbi");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_xhfi0dh2m71cu0xa19ix',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_70drd23bv0v33tz2rej6',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_g4ne2hahuv4br9goofbi(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_xhfi0dh2m71cu0xa19ix, .table th.tinytable_css_xhfi0dh2m71cu0xa19ix { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_70drd23bv0v33tz2rej6, .table th.tinytable_css_70drd23bv0v33tz2rej6 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_g4ne2hahuv4br9goofbi" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">Land</th>
+                <th scope="col">Degree std</th>
+                <th scope="col">Between std</th>
+                <th scope="col">Closeness std</th>
+                <th scope="col">Eigen std</th>
+                <th scope="col">Aggregeret</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>United States</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.98</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Belgium</td>
+                  <td>0.94</td>
+                  <td>0.7</td>
+                  <td>0.93</td>
+                  <td>0.98</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>France</td>
+                  <td>0.94</td>
+                  <td>0.59</td>
+                  <td>0.92</td>
+                  <td>1</td>
+                  <td>0.86</td>
+                </tr>
+                <tr>
+                  <td>China</td>
+                  <td>0.91</td>
+                  <td>0.71</td>
+                  <td>0.89</td>
+                  <td>0.97</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td>0.9</td>
+                  <td>0.58</td>
+                  <td>0.87</td>
+                  <td>0.97</td>
+                  <td>0.83</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td>0.87</td>
+                  <td>0.37</td>
+                  <td>0.84</td>
+                  <td>0.99</td>
+                  <td>0.77</td>
+                </tr>
+                <tr>
+                  <td>Russia</td>
+                  <td>0.83</td>
+                  <td>0.29</td>
+                  <td>0.79</td>
+                  <td>0.97</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>Japan</td>
+                  <td>0.78</td>
+                  <td>0.32</td>
+                  <td>0.75</td>
+                  <td>0.93</td>
+                  <td>0.7</td>
+                </tr>
+                <tr>
+                  <td>Italy</td>
+                  <td>0.75</td>
+                  <td>0.21</td>
+                  <td>0.72</td>
+                  <td>0.93</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td>Canada</td>
+                  <td>0.74</td>
+                  <td>0.28</td>
+                  <td>0.71</td>
+                  <td>0.88</td>
+                  <td>0.65</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Eigen std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_k1ocik3zfd0hr531asl8(i, j, css_id) {
+          var table = document.getElementById("tinytable_k1ocik3zfd0hr531asl8");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_k1ocik3zfd0hr531asl8');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_k1ocik3zfd0hr531asl8(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_k1ocik3zfd0hr531asl8");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_s88q4n8zbgk7d0hi5247',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_jn5zt0nifss9q018ampk',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_k1ocik3zfd0hr531asl8(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_s88q4n8zbgk7d0hi5247, .table th.tinytable_css_s88q4n8zbgk7d0hi5247 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_jn5zt0nifss9q018ampk, .table th.tinytable_css_jn5zt0nifss9q018ampk { border-bottom: solid #d3d8dc 0.1em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_k1ocik3zfd0hr531asl8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">Land</th>
+                <th scope="col">Degree std</th>
+                <th scope="col">Between std</th>
+                <th scope="col">Closeness std</th>
+                <th scope="col">Eigen std</th>
+                <th scope="col">Aggregeret</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>France</td>
+                  <td>0.94</td>
+                  <td>0.59</td>
+                  <td>0.92</td>
+                  <td>1</td>
+                  <td>0.86</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td>0.87</td>
+                  <td>0.37</td>
+                  <td>0.84</td>
+                  <td>0.99</td>
+                  <td>0.77</td>
+                </tr>
+                <tr>
+                  <td>United States</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.98</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Belgium</td>
+                  <td>0.94</td>
+                  <td>0.7</td>
+                  <td>0.93</td>
+                  <td>0.98</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td>0.9</td>
+                  <td>0.58</td>
+                  <td>0.87</td>
+                  <td>0.97</td>
+                  <td>0.83</td>
+                </tr>
+                <tr>
+                  <td>China</td>
+                  <td>0.91</td>
+                  <td>0.71</td>
+                  <td>0.89</td>
+                  <td>0.97</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>Russia</td>
+                  <td>0.83</td>
+                  <td>0.29</td>
+                  <td>0.79</td>
+                  <td>0.97</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>Italy</td>
+                  <td>0.75</td>
+                  <td>0.21</td>
+                  <td>0.72</td>
+                  <td>0.93</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td>Japan</td>
+                  <td>0.78</td>
+                  <td>0.32</td>
+                  <td>0.75</td>
+                  <td>0.93</td>
+                  <td>0.7</td>
+                </tr>
+                <tr>
+                  <td>Egypt</td>
+                  <td>0.73</td>
+                  <td>0.18</td>
+                  <td>0.7</td>
+                  <td>0.9</td>
+                  <td>0.63</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Aggregeret)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, Degree, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_wwakcebfbh1fiw4ipat4(i, j, css_id) {
+          var table = document.getElementById("tinytable_wwakcebfbh1fiw4ipat4");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_wwakcebfbh1fiw4ipat4');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_wwakcebfbh1fiw4ipat4(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_wwakcebfbh1fiw4ipat4");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_vjnntdnkp52bq6j0x4wu',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 }, { i: 10, j: 6 },  ], css_id: 'tinytable_css_4rj8rhuy997xb29cwu99',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_wwakcebfbh1fiw4ipat4(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_vjnntdnkp52bq6j0x4wu, .table th.tinytable_css_vjnntdnkp52bq6j0x4wu { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_4rj8rhuy997xb29cwu99, .table th.tinytable_css_4rj8rhuy997xb29cwu99 { border-bottom: solid #d3d8dc 0.1em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_wwakcebfbh1fiw4ipat4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">Land</th>
+                <th scope="col">Degree</th>
+                <th scope="col">Degree std</th>
+                <th scope="col">Between std</th>
+                <th scope="col">Closeness std</th>
+                <th scope="col">Eigen std</th>
+                <th scope="col">Aggregeret</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>United States</td>
+                  <td>175</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>0.98</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Belgium</td>
+                  <td>165</td>
+                  <td>0.94</td>
+                  <td>0.7</td>
+                  <td>0.93</td>
+                  <td>0.98</td>
+                  <td>0.89</td>
+                </tr>
+                <tr>
+                  <td>China</td>
+                  <td>160</td>
+                  <td>0.91</td>
+                  <td>0.71</td>
+                  <td>0.89</td>
+                  <td>0.97</td>
+                  <td>0.87</td>
+                </tr>
+                <tr>
+                  <td>France</td>
+                  <td>164</td>
+                  <td>0.94</td>
+                  <td>0.59</td>
+                  <td>0.92</td>
+                  <td>1</td>
+                  <td>0.86</td>
+                </tr>
+                <tr>
+                  <td>United Kingdom</td>
+                  <td>157</td>
+                  <td>0.9</td>
+                  <td>0.58</td>
+                  <td>0.87</td>
+                  <td>0.97</td>
+                  <td>0.83</td>
+                </tr>
+                <tr>
+                  <td>Germany</td>
+                  <td>153</td>
+                  <td>0.87</td>
+                  <td>0.37</td>
+                  <td>0.84</td>
+                  <td>0.99</td>
+                  <td>0.77</td>
+                </tr>
+                <tr>
+                  <td>Russia</td>
+                  <td>145</td>
+                  <td>0.83</td>
+                  <td>0.29</td>
+                  <td>0.79</td>
+                  <td>0.97</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>Japan</td>
+                  <td>137</td>
+                  <td>0.78</td>
+                  <td>0.32</td>
+                  <td>0.75</td>
+                  <td>0.93</td>
+                  <td>0.7</td>
+                </tr>
+                <tr>
+                  <td>Italy</td>
+                  <td>132</td>
+                  <td>0.75</td>
+                  <td>0.21</td>
+                  <td>0.72</td>
+                  <td>0.93</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td>Canada</td>
+                  <td>130</td>
+                  <td>0.74</td>
+                  <td>0.28</td>
+                  <td>0.71</td>
+                  <td>0.88</td>
+                  <td>0.65</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Tilbage til toppen</a></main> <!-- /main -->
