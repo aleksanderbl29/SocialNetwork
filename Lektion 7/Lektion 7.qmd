@@ -250,6 +250,20 @@ standardize_var <- function(x) {
 }
 ```
 
+```{r}
+network <- network |>
+  mutate(
+    degree_std = standardize_var(degree),
+    # in_degree_std = standardize_var(in_degree),
+    # out_degree_std = standardize_var(out_degree),
+    between_std = standardize_var(between),
+    closeness_std = standardize_var(closeness),
+    eigen_std = standardize_var(eigen)
+  ) |> as_tibble()
+
+network$agg <- rowMeans(network[, c("degree_std", "between_std", "closeness_std", "eigen_std")])
+```
+
 ## Visualisering af netværket
 
 ### Kamada-Kawai layout med degree centralitet
@@ -351,18 +365,6 @@ network |>
 ## Top 10 pr mål
 
 ```{r}
-network <- network |>
-  mutate(
-    degree_std = standardize_var(degree),
-    # in_degree_std = standardize_var(in_degree),
-    # out_degree_std = standardize_var(out_degree),
-    between_std = standardize_var(between),
-    closeness_std = standardize_var(closeness),
-    eigen_std = standardize_var(eigen)
-  ) |> as_tibble()
-
-network$agg <- rowMeans(network[, c("degree_std", "between_std", "closeness_std", "eigen_std")])
-
 colnames(network) <- c("ID", "Land", "Degree", "Between", "Closeness", "Eigen", "In degree", "Out degree", "Degree std", "Between std", "Closeness std", "Eigen std", "Aggregeret")
 
 network |>
