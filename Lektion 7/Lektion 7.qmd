@@ -8,6 +8,12 @@ date: 2025-03-24
 - Udtræk top 10 for hvert mål
 - Udregn aggregeret mål
 
+
+- Kort beskriver jeres datasæt (handel/krig/diplomati, tidsperiode, geografi osv)
+- Vælger et eller flere centralitetsmål, der kan sige noget om hvem der er "eliten" I jeres netværk. Knyt et par sætninger til hvorfor I vælger de centralitetsmål.
+- En top-10 liste over lande, der performerer bedst på jeres valgte centralitetsmål.
+
+
 ## Indlæs pakker
 
 Først skal vi indlæse de nødvendige pakker. Jeg sætter også et `seed` for at sikre det tilfædige udtræk, jeg vil bruge senere, er reproducerbart.
@@ -19,6 +25,7 @@ library(igraph)
 library(ggraph)
 library(tidygraph)
 library(tidyverse)
+library(tinytable)
 ```
 
 
@@ -62,13 +69,13 @@ Jeg har valgt året `r filter_year`.
 For at kunne omdanne datasættet vi så i @tbl-inspect til en edgelist med `from` og `to` kolonner skal vi først pivotere datasættet til langt format. Herefter skal vi finde `from` og `to` værdier på baggrund af kolonnerne `DR_at_1` og `DR_at_2`. Til sidst omdanner vi de numeriske værdier i `from` og `to` kolonnerne til de faktiske navne ved hjælp af `countrycode`-pakken.
 
 ```{r edges}
-edges <- cow |>
+edges1 <- cow |>
   filter(
     year == filter_year,
-    DR_at_1 == 3 | DR_at_2 == 3
+    DR_at_1 == 3# | DR_at_2 == 3
   ) |>
   pivot_longer(
-    cols = DR_at_1:DR_at_2,
+    cols = DR_at_1,#:DR_at_2,
     names_to = "dir",
     values_to = "val"
   ) |>
@@ -92,8 +99,44 @@ edges <- cow |>
       origin = "cown",
       destination = "country.name"
     )
-  ) |> 
+  ) |>
   distinct()
+
+edges2 <- cow |>
+  filter(
+    year == filter_year,
+    DR_at_2 == 3
+  ) |>
+  pivot_longer(
+    cols = DR_at_1,#:DR_at_2,
+    names_to = "dir",
+    values_to = "val"
+  ) |>
+  mutate(
+    from = if_else(
+      dir == "DR_at_1", ccode2, ccode1
+    ),
+    to = if_else(
+      dir == "DR_at_1", ccode1, ccode2
+    )
+  ) |>
+  select(from, to) |>
+  mutate(
+    from = countrycode::countrycode(
+      sourcevar = from,
+      origin = "cown",
+      destination = "country.name"
+    ),
+    to = countrycode::countrycode(
+      sourcevar = to,
+      origin = "cown",
+      destination = "country.name"
+    )
+  ) |>
+  distinct()
+
+edges <- rbind(edges1, edges2) |> 
+  distinct(from, to)
 ```
 
 Det giver en edgelist der ser ud som vi kan se i @tbl-edgelist.
@@ -160,35 +203,44 @@ Vi udregner degree, betweenness, closeness og eigen centralitet for netværket.
 
 ### Degree centralitet
 
+- Out-degree centralitet
+- In-degree centralitet
+
 ```{r}
-network <- network |> 
-  mutate(degree = centrality_degree())
+network <- network |>
+  mutate(
+    in_degree = centrality_degree(mode = "in"),
+    out_degree = centrality_degree(mode = "out"),
+    degree = centrality_degree(mode = "out")
+  )
 ```
 
 ### Betweenness centralitet
 
+Ud fra en broker-logik giver det god mening at se på betweenness centralitet for at finde ud af, hvem der kan være diplomatiske bindeled mellem stater.
+
 ```{r}
-network <- network |> 
+network <- network |>
   mutate(between = centrality_betweenness())
 ```
 
 ### Closeness centralitet
 
 ```{r}
-network <- network |> 
+network <- network |>
   mutate(closeness = centrality_closeness())
 ```
 
 ### Eigen centralitet
 
 ```{r}
-network <- network |> 
+network <- network |>
   mutate(eigen = centrality_eigen())
 ```
 
 ### Standardisering af mål
 
-Først definerer vi en funktion til at standardisere observationerne
+Først definerer vi en funktion til at standardisere observationerne,
 
 ```{r}
 standardize_var <- function(x) {
@@ -198,25 +250,64 @@ standardize_var <- function(x) {
 }
 ```
 
+## Top 10 pr mål
 
 ```{r}
-network |> 
+network <- network |>
   mutate(
     degree_std = standardize_var(degree),
+    # in_degree_std = standardize_var(in_degree),
+    # out_degree_std = standardize_var(out_degree),
     between_std = standardize_var(between),
     closeness_std = standardize_var(closeness),
     eigen_std = standardize_var(eigen)
-  )
+  ) |> as_tibble()
+
+network$agg <- rowMeans(network[, c("degree_std", "between_std", "closeness_std", "eigen_std")])
+
+colnames(network) <- c("ID", "Land", "Degree", "Between", "Closeness", "Eigen", "In degree", "Out degree", "Degree std", "Between std", "Closeness std", "Eigen std", "Aggregeret")
+
+network |>
+  arrange(desc(`Degree std`)) |>
+  select(Land, ends_with("std"), Aggregeret) |>
+  head(10) |>
+  tt() |>
+  format_tt(digits = 2)
+# network |>
+#   arrange(desc(in_degree_std)) |>
+#   select(name, ends_with("std"), agg) |>
+#   head(10) |>
+#   tt() |>
+#   format_tt(digits = 2)
+# network |>
+#   arrange(desc(out_degree_std)) |>
+#   select(name, ends_with("std"), agg) |>
+#   head(10) |>
+#   tt() |>
+#   format_tt(digits = 2)
+network |> 
+  arrange(desc(`Between std`)) |> 
+  select(Land, ends_with("std"), Aggregeret) |> 
+  head(10) |> 
+  tt() |> 
+  format_tt(digits = 2)
+network |> 
+  arrange(desc(`Closeness std`)) |> 
+  select(Land, ends_with("std"), Aggregeret) |> 
+  head(10) |> 
+  tt() |> 
+  format_tt(digits = 2)
+network |> 
+  arrange(desc(`Eigen std`)) |> 
+  select(Land, ends_with("std"), Aggregeret) |> 
+  head(10) |> 
+  tt() |> 
+  format_tt(digits = 2)
+network |> 
+  arrange(desc(Aggregeret)) |> 
+  select(Land, Degree, ends_with("std"), Aggregeret) |> 
+  head(10) |> 
+  tt() |> 
+  format_tt(digits = 2)
 ```
-
-
-
-
-
-
-
-
-
-
-
 
