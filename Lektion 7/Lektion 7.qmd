@@ -273,7 +273,7 @@ network |>
   ggraph(layout = "kk") +
   geom_edge_link(alpha = 0.3) +
   geom_node_point(
-    aes(size = degree),
+    aes(size = degree_std),
     color = "steelblue"
   ) +
   geom_node_label(
@@ -297,7 +297,7 @@ network |>
   ggraph(layout = "stress") +
   geom_edge_link(alpha = 0.3) +
   geom_node_point(
-    aes(size = between),
+    aes(size = between_std),
     color = "darkred"
   ) +
   geom_node_label(
@@ -321,7 +321,7 @@ network |>
   ggraph(layout = "dh") +
   geom_edge_link(alpha = 0.3) +
   geom_node_point(
-    aes(size = eigen),
+    aes(size = eigen_std),
     color = "darkgreen"
   ) +
   geom_node_label(
