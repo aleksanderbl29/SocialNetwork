@@ -107,7 +107,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Lektion 7 – Aleksanders netværksanalyser">
 <meta property="og:description" content="">
+<meta property="og:image" content="https://aleksanderbl.dk/SocialNetwork/Lektion 7/Lektion-7_files/figure-html/unnamed-chunk-8-1.png">
 <meta property="og:site_name" content="Aleksanders netværksanalyser">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
 </head>
 
 <body class="nav-fixed">
@@ -173,6 +176,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#closeness-centralitet" id="toc-closeness-centralitet" class="nav-link" data-scroll-target="#closeness-centralitet">Closeness centralitet</a></li>
   <li><a href="#eigen-centralitet" id="toc-eigen-centralitet" class="nav-link" data-scroll-target="#eigen-centralitet">Eigen centralitet</a></li>
   <li><a href="#standardisering-af-mål" id="toc-standardisering-af-mål" class="nav-link" data-scroll-target="#standardisering-af-mål">Standardisering af mål</a></li>
+  </ul></li>
+  <li><a href="#visualisering-af-netværket" id="toc-visualisering-af-netværket" class="nav-link" data-scroll-target="#visualisering-af-netværket">Visualisering af netværket</a>
+  <ul class="collapse">
+  <li><a href="#kamada-kawai-layout-med-degree-centralitet" id="toc-kamada-kawai-layout-med-degree-centralitet" class="nav-link" data-scroll-target="#kamada-kawai-layout-med-degree-centralitet">Kamada-Kawai layout med degree centralitet</a></li>
+  <li><a href="#stress-layout-med-betweenness-centralitet" id="toc-stress-layout-med-betweenness-centralitet" class="nav-link" data-scroll-target="#stress-layout-med-betweenness-centralitet">Stress layout med betweenness centralitet</a></li>
+  <li><a href="#davidson-harel-layout-med-eigen-centralitet" id="toc-davidson-harel-layout-med-eigen-centralitet" class="nav-link" data-scroll-target="#davidson-harel-layout-med-eigen-centralitet">Davidson-Harel layout med eigen centralitet</a></li>
+  <li><a href="#aggregeret-centralitet-med-cirkulær-layout" id="toc-aggregeret-centralitet-med-cirkulær-layout" class="nav-link" data-scroll-target="#aggregeret-centralitet-med-cirkulær-layout">Aggregeret centralitet med cirkulær layout</a></li>
   </ul></li>
   <li><a href="#top-10-pr-mål" id="toc-top-10-pr-mål" class="nav-link" data-scroll-target="#top-10-pr-mål">Top 10 pr mål</a></li>
   </ul>
@@ -471,7 +481,7 @@ Tabel&nbsp;1: Udsnit af det rå datasæt.
 <span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
 <span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">rbind</span>(edges1, edges2) <span class="sc">|&gt;</span> </span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">rbind</span>(edges1, edges2) <span class="sc">|&gt;</span></span>
 <span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(from, to)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Det giver en edgelist der ser ud som vi kan se i <a href="#tbl-edgelist" class="quarto-xref">Tabel&nbsp;2</a>.</p>
@@ -792,10 +802,6 @@ Tabel&nbsp;3: Udsnit af nodelist
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> min_x) <span class="sc">/</span> (max_x <span class="sc">-</span> min_x)</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-</section>
-<section id="top-10-pr-mål" class="level2">
-<h2 class="anchored" data-anchor-id="top-10-pr-mål">Top 10 pr mål</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>network <span class="ot">&lt;-</span> network <span class="sc">|&gt;</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -807,23 +813,167 @@ Tabel&nbsp;3: Udsnit af nodelist
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">eigen_std =</span> <span class="fu">standardize_var</span>(eigen)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>network<span class="sc">$</span>agg <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(network[, <span class="fu">c</span>(<span class="st">"degree_std"</span>, <span class="st">"between_std"</span>, <span class="st">"closeness_std"</span>, <span class="st">"eigen_std"</span>)])</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(network) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ID"</span>, <span class="st">"Land"</span>, <span class="st">"Degree"</span>, <span class="st">"Between"</span>, <span class="st">"Closeness"</span>, <span class="st">"Eigen"</span>, <span class="st">"In degree"</span>, <span class="st">"Out degree"</span>, <span class="st">"Degree std"</span>, <span class="st">"Between std"</span>, <span class="st">"Closeness std"</span>, <span class="st">"Eigen std"</span>, <span class="st">"Aggregeret"</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Degree std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>network<span class="sc">$</span>agg <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(network[, <span class="fu">c</span>(<span class="st">"degree_std"</span>, <span class="st">"between_std"</span>, <span class="st">"closeness_std"</span>, <span class="st">"eigen_std"</span>)])</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="visualisering-af-netværket" class="level2">
+<h2 class="anchored" data-anchor-id="visualisering-af-netværket">Visualisering af netværket</h2>
+<section id="kamada-kawai-layout-med-degree-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="kamada-kawai-layout-med-degree-centralitet">Kamada-Kawai layout med degree centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"kk"</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"steelblue"</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_label</span>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Degree</span><span class="sc">\n</span><span class="st">Centralitet"</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 328 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-7_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="stress-layout-med-betweenness-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="stress-layout-med-betweenness-centralitet">Stress layout med betweenness centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"stress"</span>) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkred"</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_label</span>(</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Betweenness</span><span class="sc">\n</span><span class="st">Centralitet"</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 201 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-7_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="davidson-harel-layout-med-eigen-centralitet" class="level3">
+<h3 class="anchored" data-anchor-id="davidson-harel-layout-med-eigen-centralitet">Davidson-Harel layout med eigen centralitet</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"dh"</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkgreen"</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_label</span>(</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Eigen</span><span class="sc">\n</span><span class="st">Centralitet"</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 225 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-7_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="aggregeret-centralitet-med-cirkulær-layout" class="level3">
+<h3 class="anchored" data-anchor-id="aggregeret-centralitet-med-cirkulær-layout">Aggregeret centralitet med cirkulær layout</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"linear"</span>, <span class="at">circular =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_arc</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"purple"</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_label</span>(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">repel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="st">"Aggregeret</span><span class="sc">\n</span><span class="st">Centralitet"</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>() <span class="sc">+</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 384 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lektion-7_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="top-10-pr-mål" class="level2">
+<h2 class="anchored" data-anchor-id="top-10-pr-mål">Top 10 pr mål</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(network) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"ID"</span>, <span class="st">"Land"</span>, <span class="st">"Degree"</span>, <span class="st">"Between"</span>, <span class="st">"Closeness"</span>, <span class="st">"Eigen"</span>, <span class="st">"In degree"</span>, <span class="st">"Out degree"</span>, <span class="st">"Degree std"</span>, <span class="st">"Between std"</span>, <span class="st">"Closeness std"</span>, <span class="st">"Eigen std"</span>, <span class="st">"Aggregeret"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Degree std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_d04jjdyhjywaxqh0qjet(i, j, css_id) {
-          var table = document.getElementById("tinytable_d04jjdyhjywaxqh0qjet");
+      function styleCell_u6ihodiz28c8ib22k8se(i, j, css_id) {
+          var table = document.getElementById("tinytable_u6ihodiz28c8ib22k8se");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -833,7 +983,7 @@ Tabel&nbsp;3: Udsnit af nodelist
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_d04jjdyhjywaxqh0qjet');
+        var table = document.getElementById('tinytable_u6ihodiz28c8ib22k8se');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -841,8 +991,8 @@ Tabel&nbsp;3: Udsnit af nodelist
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_d04jjdyhjywaxqh0qjet(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_d04jjdyhjywaxqh0qjet");
+      function spanCell_u6ihodiz28c8ib22k8se(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_u6ihodiz28c8ib22k8se");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -872,14 +1022,14 @@ Tabel&nbsp;3: Udsnit af nodelist
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_rk7w2sve0ai4x6monqpw',}, 
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_mxhwsvqfj6vthg1qfztz',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_6lc7oktqt036tgds4gy8',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_3i6y9935k03y1vsbkoeg',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_d04jjdyhjywaxqh0qjet(cell.i, cell.j, group.css_id);
+                  styleCell_u6ihodiz28c8ib22k8se(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -887,11 +1037,11 @@ Tabel&nbsp;3: Udsnit af nodelist
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_rk7w2sve0ai4x6monqpw, .table th.tinytable_css_rk7w2sve0ai4x6monqpw { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_mxhwsvqfj6vthg1qfztz, .table th.tinytable_css_mxhwsvqfj6vthg1qfztz { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_6lc7oktqt036tgds4gy8, .table th.tinytable_css_6lc7oktqt036tgds4gy8 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_3i6y9935k03y1vsbkoeg, .table th.tinytable_css_3i6y9935k03y1vsbkoeg { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_d04jjdyhjywaxqh0qjet" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_u6ihodiz28c8ib22k8se" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -990,31 +1140,31 @@ Tabel&nbsp;3: Udsnit af nodelist
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(in_degree_std)) |&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(out_degree_std)) |&gt;</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Between std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(in_degree_std)) |&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># network |&gt;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(out_degree_std)) |&gt;</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(name, ends_with("std"), agg) |&gt;</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   head(10) |&gt;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   tt() |&gt;</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   format_tt(digits = 2)</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Between std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_czgn94d89nbnnkl0ntbe(i, j, css_id) {
-          var table = document.getElementById("tinytable_czgn94d89nbnnkl0ntbe");
+      function styleCell_krn461qy7dj3i6aibe5w(i, j, css_id) {
+          var table = document.getElementById("tinytable_krn461qy7dj3i6aibe5w");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1024,7 +1174,7 @@ Tabel&nbsp;3: Udsnit af nodelist
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_czgn94d89nbnnkl0ntbe');
+        var table = document.getElementById('tinytable_krn461qy7dj3i6aibe5w');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1032,8 +1182,8 @@ Tabel&nbsp;3: Udsnit af nodelist
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_czgn94d89nbnnkl0ntbe(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_czgn94d89nbnnkl0ntbe");
+      function spanCell_krn461qy7dj3i6aibe5w(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_krn461qy7dj3i6aibe5w");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1063,14 +1213,14 @@ Tabel&nbsp;3: Udsnit af nodelist
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_qc4kbc2pd185583b0aen',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_2z0hjmo31tep53rlo4lw',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_qd921rxx2fzkkk63gk4t',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_ojq9xp0f50s4z14x866e',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_czgn94d89nbnnkl0ntbe(cell.i, cell.j, group.css_id);
+                  styleCell_krn461qy7dj3i6aibe5w(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1078,11 +1228,11 @@ Tabel&nbsp;3: Udsnit af nodelist
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_qc4kbc2pd185583b0aen, .table th.tinytable_css_qc4kbc2pd185583b0aen { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_2z0hjmo31tep53rlo4lw, .table th.tinytable_css_2z0hjmo31tep53rlo4lw { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_qd921rxx2fzkkk63gk4t, .table th.tinytable_css_qd921rxx2fzkkk63gk4t { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ojq9xp0f50s4z14x866e, .table th.tinytable_css_ojq9xp0f50s4z14x866e { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_czgn94d89nbnnkl0ntbe" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_krn461qy7dj3i6aibe5w" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1181,19 +1331,19 @@ Tabel&nbsp;3: Udsnit af nodelist
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Closeness std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Closeness std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_g4ne2hahuv4br9goofbi(i, j, css_id) {
-          var table = document.getElementById("tinytable_g4ne2hahuv4br9goofbi");
+      function styleCell_h1bztta2gl9k2qwccvks(i, j, css_id) {
+          var table = document.getElementById("tinytable_h1bztta2gl9k2qwccvks");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1203,7 +1353,7 @@ Tabel&nbsp;3: Udsnit af nodelist
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_g4ne2hahuv4br9goofbi');
+        var table = document.getElementById('tinytable_h1bztta2gl9k2qwccvks');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1211,8 +1361,8 @@ Tabel&nbsp;3: Udsnit af nodelist
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_g4ne2hahuv4br9goofbi(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_g4ne2hahuv4br9goofbi");
+      function spanCell_h1bztta2gl9k2qwccvks(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_h1bztta2gl9k2qwccvks");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1242,14 +1392,14 @@ Tabel&nbsp;3: Udsnit af nodelist
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_xhfi0dh2m71cu0xa19ix',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_70drd23bv0v33tz2rej6',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_v2bkmntojidazo2640c1',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_ojv6uqqjdaputwn9chux',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_g4ne2hahuv4br9goofbi(cell.i, cell.j, group.css_id);
+                  styleCell_h1bztta2gl9k2qwccvks(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1257,11 +1407,11 @@ Tabel&nbsp;3: Udsnit af nodelist
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_xhfi0dh2m71cu0xa19ix, .table th.tinytable_css_xhfi0dh2m71cu0xa19ix { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_70drd23bv0v33tz2rej6, .table th.tinytable_css_70drd23bv0v33tz2rej6 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_v2bkmntojidazo2640c1, .table th.tinytable_css_v2bkmntojidazo2640c1 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ojv6uqqjdaputwn9chux, .table th.tinytable_css_ojv6uqqjdaputwn9chux { border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_g4ne2hahuv4br9goofbi" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_h1bztta2gl9k2qwccvks" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1360,19 +1510,19 @@ Tabel&nbsp;3: Udsnit af nodelist
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Eigen std</span><span class="st">`</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Eigen std</span><span class="st">`</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_k1ocik3zfd0hr531asl8(i, j, css_id) {
-          var table = document.getElementById("tinytable_k1ocik3zfd0hr531asl8");
+      function styleCell_jury13rik2g52rq5ryub(i, j, css_id) {
+          var table = document.getElementById("tinytable_jury13rik2g52rq5ryub");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1382,7 +1532,7 @@ Tabel&nbsp;3: Udsnit af nodelist
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_k1ocik3zfd0hr531asl8');
+        var table = document.getElementById('tinytable_jury13rik2g52rq5ryub');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1390,8 +1540,8 @@ Tabel&nbsp;3: Udsnit af nodelist
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_k1ocik3zfd0hr531asl8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_k1ocik3zfd0hr531asl8");
+      function spanCell_jury13rik2g52rq5ryub(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_jury13rik2g52rq5ryub");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1421,14 +1571,14 @@ Tabel&nbsp;3: Udsnit af nodelist
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_s88q4n8zbgk7d0hi5247',}, 
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_jn5zt0nifss9q018ampk',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 },  ], css_id: 'tinytable_css_zzt8peq9byy0qdfbyspk',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 },  ], css_id: 'tinytable_css_lz8l6ltiju6w3awkmwyp',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_k1ocik3zfd0hr531asl8(cell.i, cell.j, group.css_id);
+                  styleCell_jury13rik2g52rq5ryub(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1436,11 +1586,11 @@ Tabel&nbsp;3: Udsnit af nodelist
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_s88q4n8zbgk7d0hi5247, .table th.tinytable_css_s88q4n8zbgk7d0hi5247 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_jn5zt0nifss9q018ampk, .table th.tinytable_css_jn5zt0nifss9q018ampk { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_zzt8peq9byy0qdfbyspk, .table th.tinytable_css_zzt8peq9byy0qdfbyspk { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_lz8l6ltiju6w3awkmwyp, .table th.tinytable_css_lz8l6ltiju6w3awkmwyp { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_k1ocik3zfd0hr531asl8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_jury13rik2g52rq5ryub" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1539,19 +1689,19 @@ Tabel&nbsp;3: Udsnit af nodelist
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Aggregeret)) <span class="sc">|&gt;</span> </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, Degree, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span> </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>network <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Aggregeret)) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Land, Degree, <span class="fu">ends_with</span>(<span class="st">"std"</span>), Aggregeret) <span class="sc">|&gt;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Kopier til udklipsholder" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_wwakcebfbh1fiw4ipat4(i, j, css_id) {
-          var table = document.getElementById("tinytable_wwakcebfbh1fiw4ipat4");
+      function styleCell_nu3h4zto4oe15n5mgqui(i, j, css_id) {
+          var table = document.getElementById("tinytable_nu3h4zto4oe15n5mgqui");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1561,7 +1711,7 @@ Tabel&nbsp;3: Udsnit af nodelist
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_wwakcebfbh1fiw4ipat4');
+        var table = document.getElementById('tinytable_nu3h4zto4oe15n5mgqui');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1569,8 +1719,8 @@ Tabel&nbsp;3: Udsnit af nodelist
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_wwakcebfbh1fiw4ipat4(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_wwakcebfbh1fiw4ipat4");
+      function spanCell_nu3h4zto4oe15n5mgqui(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_nu3h4zto4oe15n5mgqui");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1600,14 +1750,14 @@ Tabel&nbsp;3: Udsnit af nodelist
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_vjnntdnkp52bq6j0x4wu',}, 
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 }, { i: 10, j: 6 },  ], css_id: 'tinytable_css_4rj8rhuy997xb29cwu99',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 }, { i: 10, j: 6 },  ], css_id: 'tinytable_css_yzcfaify8sx67w1mypns',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 },  ], css_id: 'tinytable_css_508ifzcp54xyh45aesda',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_wwakcebfbh1fiw4ipat4(cell.i, cell.j, group.css_id);
+                  styleCell_nu3h4zto4oe15n5mgqui(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1615,11 +1765,11 @@ Tabel&nbsp;3: Udsnit af nodelist
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_vjnntdnkp52bq6j0x4wu, .table th.tinytable_css_vjnntdnkp52bq6j0x4wu { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_4rj8rhuy997xb29cwu99, .table th.tinytable_css_4rj8rhuy997xb29cwu99 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_yzcfaify8sx67w1mypns, .table th.tinytable_css_yzcfaify8sx67w1mypns { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_508ifzcp54xyh45aesda, .table th.tinytable_css_508ifzcp54xyh45aesda { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_wwakcebfbh1fiw4ipat4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_nu3h4zto4oe15n5mgqui" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
