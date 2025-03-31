@@ -135,7 +135,7 @@ edges2 <- cow |>
   ) |>
   distinct()
 
-edges <- rbind(edges1, edges2) |> 
+edges <- rbind(edges1, edges2) |>
   distinct(from, to)
 ```
 
@@ -250,6 +250,104 @@ standardize_var <- function(x) {
 }
 ```
 
+## Visualisering af netværket
+
+### Kamada-Kawai layout med degree centralitet
+
+```{r}
+network |>
+  ggraph(layout = "kk") +
+  geom_edge_link(alpha = 0.3) +
+  geom_node_point(
+    aes(size = degree),
+    color = "steelblue"
+  ) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE,
+    size = 3
+  ) +
+  labs(
+    size = "Degree\nCentralitet"
+  ) +
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+### Stress layout med betweenness centralitet
+
+```{r}
+network |>
+  ggraph(layout = "stress") +
+  geom_edge_link(alpha = 0.3) +
+  geom_node_point(
+    aes(size = between),
+    color = "darkred"
+  ) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE,
+    size = 3
+  ) +
+  labs(
+    size = "Betweenness\nCentralitet"
+  ) +
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+### Davidson-Harel layout med eigen centralitet
+
+```{r}
+network |>
+  ggraph(layout = "dh") +
+  geom_edge_link(alpha = 0.3) +
+  geom_node_point(
+    aes(size = eigen),
+    color = "darkgreen"
+  ) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE,
+    size = 3
+  ) +
+  labs(
+    size = "Eigen\nCentralitet"
+  ) +
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+### Aggregeret centralitet med cirkulær layout
+
+```{r}
+network |>
+  ggraph(layout = "linear", circular = TRUE) +
+  geom_edge_arc(alpha = 0.3) +
+  geom_node_point(
+    aes(size = agg),
+    color = "purple"
+  ) +
+  geom_node_label(
+    aes(label = name),
+    repel = TRUE,
+    size = 3
+  ) +
+  labs(
+    size = "Aggregeret\nCentralitet"
+  ) +
+  theme_graph() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
 ## Top 10 pr mål
 
 ```{r}
@@ -285,29 +383,29 @@ network |>
 #   head(10) |>
 #   tt() |>
 #   format_tt(digits = 2)
-network |> 
-  arrange(desc(`Between std`)) |> 
-  select(Land, ends_with("std"), Aggregeret) |> 
-  head(10) |> 
-  tt() |> 
+network |>
+  arrange(desc(`Between std`)) |>
+  select(Land, ends_with("std"), Aggregeret) |>
+  head(10) |>
+  tt() |>
   format_tt(digits = 2)
-network |> 
-  arrange(desc(`Closeness std`)) |> 
-  select(Land, ends_with("std"), Aggregeret) |> 
-  head(10) |> 
-  tt() |> 
+network |>
+  arrange(desc(`Closeness std`)) |>
+  select(Land, ends_with("std"), Aggregeret) |>
+  head(10) |>
+  tt() |>
   format_tt(digits = 2)
-network |> 
-  arrange(desc(`Eigen std`)) |> 
-  select(Land, ends_with("std"), Aggregeret) |> 
-  head(10) |> 
-  tt() |> 
+network |>
+  arrange(desc(`Eigen std`)) |>
+  select(Land, ends_with("std"), Aggregeret) |>
+  head(10) |>
+  tt() |>
   format_tt(digits = 2)
-network |> 
-  arrange(desc(Aggregeret)) |> 
-  select(Land, Degree, ends_with("std"), Aggregeret) |> 
-  head(10) |> 
-  tt() |> 
+network |>
+  arrange(desc(Aggregeret)) |>
+  select(Land, Degree, ends_with("std"), Aggregeret) |>
+  head(10) |>
+  tt() |>
   format_tt(digits = 2)
 ```
 
