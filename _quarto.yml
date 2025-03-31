@@ -38,3 +38,4 @@ format:
     theme: united
     toc: true
     smooth-scroll: true
+  pdf: default
